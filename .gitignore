@@ -154,3 +154,12 @@ sasc/config.py
 **.json
 **.jbl
 **.csv
+**.wav
+*.joblib
+**.tar.gz
+**.npz
+**.txt
+**.pkl
+**.jbl
+**pycache*
+**.png

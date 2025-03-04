@@ -11,22 +11,22 @@ required_pypi = [
     'scikit-learn',
     'pandas',
     'tqdm',
-    'dict_hash', # required for caching
+    'dict_hash',  # required for caching
     'transformers',
     'torch',
     'imodelsx',
     'langchain',
     'openai',
     'accelerate',
-    'InstructorEmbedding', # embeddings for emb_diff_module
-    'sentence-transformers', # embeddings for emb_diff_module
+    'InstructorEmbedding',  # embeddings for emb_diff_module
+    'sentence-transformers',  # embeddings for emb_diff_module
     'bert-score',
-    'datasets', # optional, required for getting NLP datasets
-    'pytest', # optional, required for running tests
+    'datasets',  # optional, required for getting NLP datasets
+    'pytest',  # optional, required for running tests
 ]
 
 setuptools.setup(
-    name="sasc",
+    name="neuro",
     version="0.01",
     author="Microsoft Research",
     author_email="",

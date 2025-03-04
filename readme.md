@@ -1,6 +1,6 @@
-<h1 align="center">   <img src="https://microsoft.github.io/augmented-interpretable-models/auggam_gif.gif" width="25%"> Automated explanations <img src="https://microsoft.github.io/augmented-interpretable-models/auggam_gif.gif" width="25%"></h1>
+<h1 align="center">   <img src="https://microsoft.github.io/augmented-interpretable-models/auggam_gif.gif" width="25%"> Automated brain explanations <img src="https://microsoft.github.io/augmented-interpretable-models/auggam_gif.gif" width="25%"></h1>
 
-<p align="center"> A generative framework to bridge data-driven models and scientific theories in language neuroscience (<a href="https://arxiv.org/abs/2410.00812v1">arXiv 2024</a>)
+<p align="center"> Generative causal testing to bridge data-driven models and scientific theories in language neuroscience (<a href="https://arxiv.org/abs/2410.00812">arXiv 2024</a>)
 </p>
 <p align="center"> Explaining black box text modules in natural language with language models (<a href="https://arxiv.org/abs/2305.09863">arXiv 2023</a>)
 </p>
