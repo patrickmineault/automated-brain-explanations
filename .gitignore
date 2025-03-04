@@ -163,3 +163,5 @@ sasc/config.py
 **.jbl
 **pycache*
 **.png
+**.nii.gz
+**.gz

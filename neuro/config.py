@@ -3,7 +3,7 @@ import os.path
 path_to_file = os.path.dirname(os.path.abspath(__file__))
 repo_dir = dirname(path_to_file)
 REPO_DIR = repo_dir
-PROCESSED_DIR = join(repo_dir, 'qa_results', 'processed')
+# PROCESSED_DIR = join(repo_dir, 'qa_results', 'processed')
 
 if 'chansingh' in expanduser('~'):
     mnt_dir = '/home/chansingh/mntv1'
