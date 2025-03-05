@@ -168,3 +168,4 @@ sasc/config.py
 joblib
 **.pdf
 **.zip
+**.h5
