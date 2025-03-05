@@ -1,4 +1,4 @@
-from neuro.sasc.config import RESULTS_DIR, SAVE_DIR_FMRI
+from neuro.config import RESULTS_DIR_LOCAL, SAVE_DIR_FMRI
 from collections import defaultdict
 import pandas as pd
 import logging
@@ -37,7 +37,7 @@ VOXELS_IDXS_DICT = {
 }
 
 STABILITY_SCORES_DICT = joblib.load(
-    join(RESULTS_DIR, "sasc", "fmri_stability_scores.jbl"))
+    join(RESULTS_DIR_LOCAL, "sasc", "fmri_stability_scores.jbl"))
 
 
 def convert_module_num_to_voxel_num(module_num: int, subject: str):

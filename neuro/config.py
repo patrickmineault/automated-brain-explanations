@@ -1,23 +1,34 @@
-from os.path import join, expanduser, dirname
+from os.path import join, expanduser, dirname, abspath
 import os.path
-path_to_file = os.path.dirname(os.path.abspath(__file__))
-repo_dir = dirname(path_to_file)
-REPO_DIR = repo_dir
-# PROCESSED_DIR = join(repo_dir, 'qa_results', 'processed')
-
+path_to_file = os.path.dirname(abspath(__file__))
+REPO_DIR = dirname(path_to_file)
 if 'chansingh' in expanduser('~'):
-    mnt_dir = '/home/chansingh/mntv1'
+    MNT_DIR = '/home/chansingh/mntv1'
 else:
-    mnt_dir = '/mntv1'
+    MNT_DIR = '/mntv1'
 
-root_dir = join(mnt_dir, 'deep-fMRI')
-cache_embs_dir = join(root_dir, 'qa', 'cache_embs')
-resp_processing_dir = join(root_dir, 'qa', 'resp_processing_full')
-brain_drive_resps_dir = join(root_dir, 'brain_tune', 'story_data')
+FMRI_DIR_BLOB = join(MNT_DIR, 'deep-fMRI')
+RESULTS_DIR_LOCAL = join(REPO_DIR, 'results')
+NEUROSYNTH_DATA_DIR = join(FMRI_DIR_BLOB, 'qa', 'neurosynth_data')
+
+
+STORIES_DIR_GCT = join(RESULTS_DIR_LOCAL, "stories")
+SAVE_DIR_FMRI = join(FMRI_DIR_BLOB, 'sasc', 'rj_models')
+CACHE_DIR = join(FMRI_DIR_BLOB, 'sasc', 'mprompt', 'cache')
+PILOT_STORY_DATA_DIR = join(FMRI_DIR_BLOB, 'brain_tune/story_data')
+
+CACHE_NGRAMS_DIR = join(FMRI_DIR_BLOB, 'sasc/mprompt/cache/cache_ngrams')
+REGION_IDXS_DIR = join(FMRI_DIR_BLOB, 'sasc/brain_regions')
+
+
+PROCESSED_DIR = join(FMRI_DIR_BLOB, 'qa', 'processed')
+CACHE_EMBS_DIR = join(FMRI_DIR_BLOB, 'qa', 'cache_embs')
+RESP_PROCESSING_DIR = join(FMRI_DIR_BLOB, 'qa', 'resp_processing_full')
+GEMV_RESPS_DIR = join(FMRI_DIR_BLOB, 'brain_tune', 'story_data')
 
 # eng1000 data, download from [here](https://github.com/HuthLab/deep-fMRI-dataset)
-em_data_dir = join(root_dir, 'data', 'eng1000')
-nlp_utils_dir = join(root_dir, 'nlp_utils')
+EM_DATA_DIR = join(FMRI_DIR_BLOB, 'data', 'eng1000')
+NLP_UTILS_DIR = join(FMRI_DIR_BLOB, 'nlp_utils')
 
 
 def setup_freesurfer():
@@ -34,11 +45,3 @@ def setup_freesurfer():
     }
     for k in FREESURFER_VARS.keys():
         os.environ[k] = FREESURFER_VARS[k]
-
-
-VOX_COUNTS = {
-    'S01': 81126,
-    'S02': 94251,
-    'S03': 95556,
-    'Mean': 90311
-}

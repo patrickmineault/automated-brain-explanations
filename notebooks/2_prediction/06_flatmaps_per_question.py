@@ -14,40 +14,11 @@ import dvu
 from neuro import analyze_helper
 import sys
 import json
+import neuro.flatmaps_helper
 sys.path.append('..')
 fit_encoding = __import__('02_fit_encoding')
 path_to_repo = dirname(dirname(os.path.abspath(__file__)))
 dvu.set_style()
-
-
-def get_weights_top(args, avg_over_delays=True):
-    '''Return weights without delays out_size x
-    '''
-
-    model_params = joblib.load(
-        join(args.save_dir_unique, 'model_params.pkl'))
-    # print(f'{args.feature_space=}, {args.pc_components=}, {args.ndelays=} {args.qa_embedding_model}')
-
-    # get weights
-    ndelays = args.ndelays
-    weights = model_params['weights']
-    assert weights.shape[0] % ndelays == 0
-    emb_size = weights.shape[0] / ndelays
-    weights = weights.reshape(ndelays, int(emb_size), -1)
-    if avg_over_delays:
-        weights = weights.mean(axis=0)
-
-    if hasattr(model_params, 'weights_pc'):
-        weights_pc = model_params['weights_pc']
-        assert weights_pc.shape[0] % ndelays == 0
-        qs_size = weights_pc.shape[0] / ndelays
-        weights_pc = weights_pc.reshape(ndelays, int(qs_size), -1)
-        if avg_over_delays:
-            weights_pc = weights_pc.mean(axis=0)
-    else:
-        weights_pc = None
-
-    return weights, weights_pc
 
 
 def save_coefs_csv(weights, out_dir, version, questions):
@@ -122,7 +93,8 @@ if __name__ == '__main__':
                 args_dict = {k: v for k, v in args0.to_dict().items(
                 ) if not isinstance(v, np.ndarray)}
 
-                weights, weights_pc = get_weights_top(args0)
+                weights, weights_pc = neuro.flatmaps_helper.get_weights_top(
+                    args0)
                 # emb_size x num_voxels
                 questions = qa_questions.get_questions(version, full=True)
                 if isinstance(args0.weight_enet_mask, np.ndarray):

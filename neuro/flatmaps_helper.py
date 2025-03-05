@@ -3,54 +3,54 @@ import joblib
 import numpy as np
 import sys
 from os.path import abspath, dirname, join
-try:
-    from sasc.config import FMRI_DIR, STORIES_DIR, RESULTS_DIR, CACHE_DIR, cache_ngrams_dir, regions_idxs_dir
-except ImportError:
-    repo_path = dirname(dirname(dirname(abspath(__file__))))
-    RESULTS_DIR = join(repo_path, 'results')
+from neuro import config
+
+FLATMAPS_DIR = join(config.FMRI_DIR_BLOB, 'brain_tune', 'flatmaps_all')
+'''Note: these flatmaps were saved by the 03_resp_flatmaps.py script under GCT / 2_analyze
+'''
 
 
 def load_flatmaps(normalize_flatmaps, load_timecourse=False, explanations_only=False):
     # S02
     gemv_flatmaps_default = joblib.load(join(
-        RESULTS_DIR, "processed", "flatmaps_all", "UTS02", "default_pilot", 'resps_avg_dict_pilot.pkl'))
+        FLATMAPS_DIR, "UTS02", "default_pilot", 'resps_avg_dict_pilot.pkl'))
     gemv_flatmaps_qa = joblib.load(join(
-        RESULTS_DIR, "processed", "flatmaps_all", "UTS02", 'qa_pilot5', 'resps_avg_dict_pilot5.pkl'))
+        FLATMAPS_DIR, "UTS02", 'qa_pilot5', 'resps_avg_dict_pilot5.pkl'))
     gemv_flatmaps_roi = joblib.load(join(
-        RESULTS_DIR, "processed", "flatmaps_all", "UTS02", 'roi_pilot5', 'resps_avg_dict_pilot5.pkl'))
+        FLATMAPS_DIR, "UTS02", 'roi_pilot5', 'resps_avg_dict_pilot5.pkl'))
 
     gemv_flatmaps_roi_custom = joblib.load(join(
-        RESULTS_DIR, "processed", "flatmaps_all", 'UTS02', 'roi_pilot6', 'resps_avg_dict_pilot6.pkl'))
+        FLATMAPS_DIR, 'UTS02', 'roi_pilot6', 'resps_avg_dict_pilot6.pkl'))
     gemv_flatmaps_dict_S02 = gemv_flatmaps_default | gemv_flatmaps_qa | gemv_flatmaps_roi | gemv_flatmaps_roi_custom
     # gemv_flatmaps_dict_S02 = gemv_flatmaps_roi_custom
 
     # S03
     gemv_flatmaps_default = joblib.load(join(
-        RESULTS_DIR, "processed", "flatmaps_all", 'UTS03', 'default', 'resps_avg_dict_pilot3.pkl'))
+        FLATMAPS_DIR, 'UTS03', 'default', 'resps_avg_dict_pilot3.pkl'))
     gemv_flatmaps_roi_custom1 = joblib.load(join(
-        RESULTS_DIR, "processed", "flatmaps_all", 'UTS03', 'roi_pilot7', 'resps_avg_dict_pilot7.pkl'))
+        FLATMAPS_DIR, 'UTS03', 'roi_pilot7', 'resps_avg_dict_pilot7.pkl'))
     gemv_flatmaps_roi_custom2 = joblib.load(join(
-        RESULTS_DIR, "processed", "flatmaps_all", 'UTS03', 'roi_pilot8', 'resps_avg_dict_pilot8.pkl'))
+        FLATMAPS_DIR, 'UTS03', 'roi_pilot8', 'resps_avg_dict_pilot8.pkl'))
     # gemv_flatmaps_dict_S03 = gemv_flatmaps_default | gemv_flatmaps_roi_custom1 | gemv_flatmaps_roi_custom2
     gemv_flatmaps_dict_S03 = gemv_flatmaps_roi_custom1 | gemv_flatmaps_roi_custom2
 
     if load_timecourse:
         gemv_flatmaps_default = joblib.load(join(
-            RESULTS_DIR, "processed", "flatmaps_all", "UTS02", "default_pilot", 'resps_concat_dict_pilot.pkl'))
+            FLATMAPS_DIR, "UTS02", "default_pilot", 'resps_concat_dict_pilot.pkl'))
         gemv_flatmaps_qa = joblib.load(join(
-            RESULTS_DIR, "processed", "flatmaps_all", "UTS02", 'qa_pilot5', 'resps_concat_dict_pilot5.pkl'))
+            FLATMAPS_DIR, "UTS02", 'qa_pilot5', 'resps_concat_dict_pilot5.pkl'))
         gemv_flatmaps_roi = joblib.load(join(
-            RESULTS_DIR, "processed", "flatmaps_all", "UTS02", 'roi_pilot5', 'resps_concat_dict_pilot5.pkl'))
+            FLATMAPS_DIR, "UTS02", 'roi_pilot5', 'resps_concat_dict_pilot5.pkl'))
         gemv_flatmaps_roi_custom = joblib.load(join(
-            RESULTS_DIR, "processed", "flatmaps_all", 'UTS02', 'roi_pilot6', 'resps_concat_dict_pilot6.pkl'))
+            FLATMAPS_DIR, 'UTS02', 'roi_pilot6', 'resps_concat_dict_pilot6.pkl'))
 
         gemv_flatmaps_dict_S02_timecourse = gemv_flatmaps_default | gemv_flatmaps_qa | gemv_flatmaps_roi | gemv_flatmaps_roi_custom
         # gemv_flatmaps_dict_S02_timecourse = gemv_flatmaps_roi_custom
 
         gemv_flatmaps_roi_custom1 = joblib.load(join(
-            RESULTS_DIR, "processed", "flatmaps_all", 'UTS03', 'roi_pilot7', 'resps_concat_dict_pilot7.pkl'))
+            FLATMAPS_DIR, 'UTS03', 'roi_pilot7', 'resps_concat_dict_pilot7.pkl'))
         gemv_flatmaps_roi_custom2 = joblib.load(join(
-            RESULTS_DIR, "processed", "flatmaps_all", 'UTS03', 'roi_pilot8', 'resps_concat_dict_pilot8.pkl'))
+            FLATMAPS_DIR, 'UTS03', 'roi_pilot8', 'resps_concat_dict_pilot8.pkl'))
         gemv_flatmaps_dict_S03_timecourse = gemv_flatmaps_roi_custom1 | gemv_flatmaps_roi_custom2
 
         return gemv_flatmaps_dict_S02, gemv_flatmaps_dict_S03, gemv_flatmaps_dict_S02_timecourse, gemv_flatmaps_dict_S03_timecourse
@@ -67,6 +67,36 @@ def load_flatmaps(normalize_flatmaps, load_timecourse=False, explanations_only=F
                 flatmap_unnormalized - flatmap_unnormalized.mean()) / flatmap_unnormalized.std()
 
     return gemv_flatmaps_dict_S02, gemv_flatmaps_dict_S03
+
+
+def get_weights_top(args, avg_over_delays=True):
+    '''Return weights without delays out_size x
+    '''
+
+    model_params = joblib.load(
+        join(args.save_dir_unique, 'model_params.pkl'))
+    # print(f'{args.feature_space=}, {args.pc_components=}, {args.ndelays=} {args.qa_embedding_model}')
+
+    # get weights
+    ndelays = args.ndelays
+    weights = model_params['weights']
+    assert weights.shape[0] % ndelays == 0
+    emb_size = weights.shape[0] / ndelays
+    weights = weights.reshape(ndelays, int(emb_size), -1)
+    if avg_over_delays:
+        weights = weights.mean(axis=0)
+
+    if hasattr(model_params, 'weights_pc'):
+        weights_pc = model_params['weights_pc']
+        assert weights_pc.shape[0] % ndelays == 0
+        qs_size = weights_pc.shape[0] / ndelays
+        weights_pc = weights_pc.reshape(ndelays, int(qs_size), -1)
+        if avg_over_delays:
+            weights_pc = weights_pc.mean(axis=0)
+    else:
+        weights_pc = None
+
+    return weights, weights_pc
 
 
 def load_custom_rois(subject, suffix_setting='_fedorenko'):

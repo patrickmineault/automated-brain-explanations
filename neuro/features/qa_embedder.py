@@ -27,7 +27,7 @@ import pandas as pd
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, AdamW, AutoModel
 import torch
 from torch import nn
-from neuro.config import root_dir
+import neuro.config as config
 # from vllm import LLM, SamplingParams
 # import torch
 
@@ -72,7 +72,8 @@ class FinetunedQAEmbedder:
         }
         self.question_idxs = question_idxs[qa_questions_version]
 
-        state_dict = torch.load(join(root_dir, 'finetune', f'{checkpoint}.pt'))
+        state_dict = torch.load(
+            join(config.ROOT_DIR, 'finetune', f'{checkpoint}.pt'))
         self.model.load_state_dict(state_dict)
         self.model = torch.nn.DataParallel(self.model).to('cuda')
 
@@ -91,7 +92,8 @@ class FinetunedQAEmbedder:
                 outputs = self.model(**{k: v[i:i+batch_size]
                                         for k, v in inputs.items()})
                 answer_predictions.append(outputs.cpu().detach().numpy())
-            answer_predictions = answer_predictions[self.question_idxs[0]:self.question_idxs[1]]
+            answer_predictions = answer_predictions[self.question_idxs[0]
+                :self.question_idxs[1]]
             answer_predictions = np.vstack(answer_predictions)
             answer_predictions = scipy.special.softmax(
                 answer_predictions, axis=-1)

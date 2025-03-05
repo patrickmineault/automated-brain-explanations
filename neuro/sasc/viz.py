@@ -6,11 +6,8 @@ import matplotlib.pyplot as plt
 from typing import List
 import seaborn as sns
 from matplotlib.backends.backend_pdf import PdfPages
-# import adjustText
-import neuro.sasc.config
-from os.path import join
+from os.path import join, dirname
 import os
-from os.path import dirname
 import os.path
 import cortex
 # import matplotlib.colormaps
@@ -34,7 +31,7 @@ cblue = "#66ccff"
 cred = "#cc0000"
 
 
-def imshow_diverging(mat, clab="Mean response ($\sigma$)", clab_size='medium', vabs_multiplier=1):
+def imshow_diverging(mat, clab="Mean response ($\\sigma$)", clab_size='medium', vabs_multiplier=1):
     vabs = np.nanmax(np.abs(mat)) * vabs_multiplier
     plt.imshow(mat, cmap=sns.diverging_palette(
         220, 29, as_cmap=True), vmin=-vabs, vmax=vabs)
@@ -159,57 +156,6 @@ def heatmap(
     # plt.show()
 
 
-def quickshow(
-        X: np.ndarray, subject="UTS03", fname_save=None, cmap='RdBu_r',
-        with_colorbar=True, kwargs={'with_rois': True}, cmap_perc_to_hide=None):
-    import cortex
-
-    """
-    Actual visualizations
-    Note: for this to work, need to point the cortex config filestore to the `ds003020/derivative/pycortex-db` directory.
-    This might look something like `/home/chansingh/mntv1/deep-fMRI/data/ds003020/derivative/pycortex-db/UTS03/anatomicals/`
-    """
-    if isinstance(X, cortex.VolumeRGB):
-        vol = X
-    else:
-        if isinstance(X, cortex.Volume):
-            vol = X
-            X = vol.data
-        else:
-            if subject == 'fsaverage':
-                xfmname = 'atlas_2mm'
-            else:
-                if subject.startswith('S0'):
-                    subject = 'UT' + subject
-                xfmname = f"{subject}_auto"
-            vol = cortex.Volume(X, subject, xfmname=xfmname, cmap=cmap)
-        # , with_curvature=True, with_sulci=True)
-        vabs = np.nanmax(np.abs(X))
-        if not cmap == 'Reds':
-            vol.vmin = -vabs
-            vol.vmax = vabs
-        elif cmap == 'Reds':
-            vol.vmin = np.nanmin(X)
-            vol.vmax = np.nanmax(X)
-
-        if cmap_perc_to_hide is not None:
-            vol.vmin = np.nanpercentile(X, cmap_perc_to_hide)
-            vol.vmax = np.nanpercentile(X, 100 - cmap_perc_to_hide)
-    # fig = plt.figure()
-    # , vmin=-vabs, vmax=vabs)
-    cortex.quickshow(vol, with_colorbar=with_colorbar, **kwargs)
-    # fig = plt.gcf()
-    # add title
-    # fig.axes[0].set_title(title, fontsize='xx-small')
-    if fname_save is not None:
-        if not os.path.dirname(fname_save) == '':
-            os.makedirs(os.path.dirname(fname_save), exist_ok=True)
-        plt.savefig(fname_save)
-        plt.savefig(fname_save.replace(".pdf", ".png"),
-                    transparent=True, bbox_inches='tight')
-        plt.close()
-
-
 def outline_diagonal(shape, color='gray', lw=1, block_size=1):
     for r in range(shape[0]):
         for c in range(shape[1]):
@@ -332,7 +278,7 @@ def plot_annotated_resp(
     plt.xlim((start_times[0] - trim, end_times[-1] - trim))
 
     plt.ylabel(
-        f'"{expl_voxel}"\nvoxel\nresponse ($\sigma_f$)', fontsize='x-small'
+        f'"{expl_voxel}"\nvoxel\nresponse ($\\sigma_f$)', fontsize='x-small'
     )
 
     # plt.show()
@@ -377,7 +323,7 @@ def barplot_default(
                  fmt='.', ms=0, color='black', elinewidth=3, capsize=5)
 
     plt.xticks([1, 2], ['Drive', 'Baseline'])
-    plt.ylabel('Mean voxel response ($\sigma_f$)')
+    plt.ylabel('Mean voxel response ($\\sigma_f$)')
     plt.grid(axis='y')
 
     # annotate the point with the highest mean
@@ -472,7 +418,7 @@ def barplot_interaction(
                  fmt='.', label='Diagonal', ms=0, color='black', elinewidth=3, capsize=5, lw=1)
 
     plt.xticks([0, 1, 2], ['Drive single', 'Drive pair', 'Baseline'])
-    plt.ylabel('Mean voxel response ($\sigma_f$)')
+    plt.ylabel('Mean voxel response ($\\sigma_f$)')
     plt.grid(axis='y')
 
     plt.tight_layout()
@@ -533,7 +479,7 @@ def barplot_polysemantic(
                  fmt='.', ms=0, color='black', elinewidth=3, capsize=5)
 
     plt.xticks([1, 2], ['Drive', 'Baseline'])
-    plt.ylabel('Mean voxel response ($\sigma$)')
+    plt.ylabel('Mean voxel response ($\\sigma$)')
     plt.grid(axis='y')
 
     # annotate the point with the highest mean
@@ -568,7 +514,7 @@ def stories_barplot(story_scores_df):
         'driving', 'baseline'], var_name='condition', value_name='mean')
     story_scores_df = story_scores_df.sort_values(by='story')
     sns.barplot(data=story_scores_df, x='story', y='mean', hue='condition')
-    plt.ylabel('Mean voxel response ($\sigma_f$)')
+    plt.ylabel('Mean voxel response ($\\sigma_f$)')
 
 
 def _save_flatmap(vals, subject, fname_save, clab=None, with_rois=True, cmap='RdBu_r', with_borders=False, show=False, vabs=None):

@@ -1,7 +1,32 @@
+import matplotlib
+from matplotlib.cm import ScalarMappable
+from matplotlib.colors import Normalize
+import numpy as np
+import matplotlib.pyplot as plt
+from typing import List
+import seaborn as sns
+from os.path import join
+import os
+from os.path import dirname
+import os.path
+import cortex
+
 MODELS_RENAME = {
     'bert-base-uncased': 'BERT (Finetuned)',
     'bert-10__ndel=4fmri': 'BERT+fMRI (Finetuned)',
 }
+
+
+def savefig(fname, *args, **kwargs):
+    """
+    Save figure to file
+    """
+    if not os.path.dirname(fname) == '':
+        os.makedirs(os.path.dirname(fname), exist_ok=True)
+    plt.savefig(fname, *args, **kwargs)
+    # plt.savefig(fname.replace(".pdf", ".png"),
+    # transparent=True, bbox_inches='tight')
+    plt.close()
 
 
 def feature_space_rename(x):
@@ -54,3 +79,54 @@ def dset_rename(x):
         x = x.replace('probing-', '')
         x = x.replace('_', ' ')
         return x.capitalize()
+
+
+def quickshow(
+        X: np.ndarray, subject="UTS03", fname_save=None, cmap='RdBu_r',
+        with_colorbar=True, kwargs={'with_rois': True}, cmap_perc_to_hide=None):
+    import cortex
+
+    """
+    Actual visualizations
+    Note: for this to work, need to point the cortex config filestore to the `ds003020/derivative/pycortex-db` directory.
+    This might look something like `/home/chansingh/mntv1/deep-fMRI/data/ds003020/derivative/pycortex-db/UTS03/anatomicals/`
+    """
+    if isinstance(X, cortex.VolumeRGB):
+        vol = X
+    else:
+        if isinstance(X, cortex.Volume):
+            vol = X
+            X = vol.data
+        else:
+            if subject == 'fsaverage':
+                xfmname = 'atlas_2mm'
+            else:
+                if subject.startswith('S0'):
+                    subject = 'UT' + subject
+                xfmname = f"{subject}_auto"
+            vol = cortex.Volume(X, subject, xfmname=xfmname, cmap=cmap)
+        # , with_curvature=True, with_sulci=True)
+        vabs = np.nanmax(np.abs(X))
+        if not cmap == 'Reds':
+            vol.vmin = -vabs
+            vol.vmax = vabs
+        elif cmap == 'Reds':
+            vol.vmin = np.nanmin(X)
+            vol.vmax = np.nanmax(X)
+
+        if cmap_perc_to_hide is not None:
+            vol.vmin = np.nanpercentile(X, cmap_perc_to_hide)
+            vol.vmax = np.nanpercentile(X, 100 - cmap_perc_to_hide)
+    # fig = plt.figure()
+    # , vmin=-vabs, vmax=vabs)
+    cortex.quickshow(vol, with_colorbar=with_colorbar, **kwargs)
+    # fig = plt.gcf()
+    # add title
+    # fig.axes[0].set_title(title, fontsize='xx-small')
+    if fname_save is not None:
+        if not os.path.dirname(fname_save) == '':
+            os.makedirs(os.path.dirname(fname_save), exist_ok=True)
+        plt.savefig(fname_save)
+        plt.savefig(fname_save.replace(".pdf", ".png"),
+                    transparent=True, bbox_inches='tight')
+        plt.close()

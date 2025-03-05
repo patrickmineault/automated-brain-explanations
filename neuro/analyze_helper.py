@@ -12,8 +12,36 @@ import numpy as np
 import sys
 sys.path.append('../experiments')
 # dvu.set_style()
-fit_encoding = __import__('02_fit_encoding')
 best_results_dir = '/home/chansingh/mntv1/deep-fMRI/encoding/may7'
+
+VOX_COUNTS = {
+    'S01': 81126,
+    'S02': 94251,
+    'S03': 95556,
+    'Mean': 90311
+}
+
+
+def abbrev_question(q):
+    q = q.replace('Is time mentioned in the input?',
+                  'Does the input mention time?')
+    q = q.replace('express a sense of belonging or connection to a place or community',
+                  'express a connection to a community')
+    q = q.replace('express the narrator\'s opinion or judgment about an event or character',
+                  'express an opinion about an event or character')
+    q = q.replace('involve a description of', 'describe a')
+    q = q.replace('involve a discussion about', 'discuss')
+    q = q.replace('involve an expression of', 'express')
+    q = q.replace('involve the mention of', 'mention')
+    q = q.replace('that leads to a change or revelation', '')
+    q = q.replace(' ?', '?')
+    for prefix in ['Does the sentence ', 'Is the sentence ', 'Does the input ', 'Is the input ', 'Does the text ', 'Is there a ', 'Is an ', 'Is a ', 'Is there ',]:
+        q = q.replace(prefix, '...')
+    return q
+
+
+def abbrev_questions(qs):
+    return [abbrev_question(q) for q in qs]
 
 
 def load_results(save_dir):
@@ -71,25 +99,3 @@ def load_clean_results(results_dir, experiment_filename='../experiments/02_fit_e
     )
     mets.append('corrs_test_mean_sem')
     return r, cols_varied, mets
-
-
-def abbrev_question(q):
-    q = q.replace('Is time mentioned in the input?',
-                  'Does the input mention time?')
-    q = q.replace('express a sense of belonging or connection to a place or community',
-                  'express a connection to a community')
-    q = q.replace('express the narrator\'s opinion or judgment about an event or character',
-                  'express an opinion about an event or character')
-    q = q.replace('involve a description of', 'describe a')
-    q = q.replace('involve a discussion about', 'discuss')
-    q = q.replace('involve an expression of', 'express')
-    q = q.replace('involve the mention of', 'mention')
-    q = q.replace('that leads to a change or revelation', '')
-    q = q.replace(' ?', '?')
-    for prefix in ['Does the sentence ', 'Is the sentence ', 'Does the input ', 'Is the input ', 'Does the text ', 'Is there a ', 'Is an ', 'Is a ', 'Is there ',]:
-        q = q.replace(prefix, '...')
-    return q
-
-
-def abbrev_questions(qs):
-    return [abbrev_question(q) for q in qs]

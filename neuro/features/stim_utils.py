@@ -12,14 +12,14 @@ import joblib
 
 def load_story_wordseqs(stories) -> Dict[str, DataSequence]:
     # load textgrids
-    base = join(config.root_dir, 'data', "ds003020/derivative/TextGrids")
+    base = join(config.FMRI_DIR_BLOB, 'data', "ds003020/derivative/TextGrids")
     grids = {}
     for story in stories:
         grid_path = os.path.join(base, f"{story}.TextGrid")
         grids[story] = TextGrid(open(grid_path).read())
 
     # make into wordseqs
-    with open(join(config.root_dir, 'data', "ds003020/derivative/respdict.json"), "r") as f:
+    with open(join(config.FMRI_DIR_BLOB, 'data', "ds003020/derivative/respdict.json"), "r") as f:
         respdict = json.load(f)
     trfiles = load_simulated_trfiles(respdict)
     wordseqs = make_word_ds(grids, trfiles)
@@ -27,11 +27,11 @@ def load_story_wordseqs(stories) -> Dict[str, DataSequence]:
 
 
 def load_story_wordseqs_huge(stories) -> Dict[str, DataSequence]:
-    wordseqs = joblib.load(join(config.root_dir, 'data',
+    wordseqs = joblib.load(join(config.FMRI_DIR_BLOB, 'data',
                                 'huge_data', 'wordseqs.joblib'))
-    # trfiles = joblib.load(join(config.root_dir, 'data',
+    # trfiles = joblib.load(join(config.FMRI_DIR_BLOB, 'data',
     #                            'huge_data', 'trfiles_huge.jbl'))
-    # grids = joblib.load(join(config.root_dir, 'data',
+    # grids = joblib.load(join(config.FMRI_DIR_BLOB, 'data',
     #                          'huge_data', 'grids_huge.jbl'))
     # wordseqs = make_word_ds(grids, trfiles)
     wordseqs = {k: v for k, v in wordseqs.items() if k in stories}

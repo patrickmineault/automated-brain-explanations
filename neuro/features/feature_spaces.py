@@ -21,7 +21,6 @@ import logging
 import imodelsx.llm
 from neuro.features.qa_embedder import QuestionEmbedder, FinetunedQAEmbedder
 import neuro.config as config
-import neuro.config
 from neuro.features.stim_utils import load_story_wordseqs, load_story_wordseqs_huge, load_story_wordseqs_wrapper
 
 
@@ -79,7 +78,7 @@ def get_eng1000_vectors(wordseqs, story_names: List[str], downsample='lanczos', 
     -------
     Dictionary of {story: downsampled vectors}
     """
-    eng1000 = SemanticModel.load(join(config.em_data_dir, "english1000sm.hf5"))
+    eng1000 = SemanticModel.load(join(config.EM_DATA_DIR, "english1000sm.hf5"))
     # wordseqs = load_story_wordseqs(story_names)
     vectors = {}
     for story in story_names:
@@ -147,7 +146,7 @@ def get_gpt4_qa_embs_cached(
         if a question is not found in the list, returns nan for that column in embs
     '''
     # set up question names
-    CACHE_DIR_GPT = join(neuro.config.root_dir, 'qa/cache_gpt')
+    CACHE_DIR_GPT = join(config.ROOT_DIR, 'qa/cache_gpt')
     if questions is None or questions == []:
         if '?' in qa_questions_version:
             questions = [qa_questions_version]
@@ -286,7 +285,7 @@ def get_llm_vectors(
             args_cache['story_gen'] = True
         cache_hash = sha256(args_cache)
         cache_file = join(
-            config.cache_embs_dir, qa_questions_version, checkpoint.replace('/', '_'), f'{cache_hash}.jl')
+            config.CACHE_EMBS_DIR, qa_questions_version, checkpoint.replace('/', '_'), f'{cache_hash}.jl')
         loaded_from_cache = False
         if os.path.exists(cache_file) and use_cache and qa_embedding_model != 'gpt4':
             logging.info(
