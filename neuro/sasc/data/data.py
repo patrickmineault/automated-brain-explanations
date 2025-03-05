@@ -1,17 +1,19 @@
+import re
+from os.path import join
 from typing import List
+
 import numpy as np
 from datasets import load_dataset
-from sasc.data.d3 import TASKS_D3
-from sasc.data.toy import TASKS_TOY
-from sasc.modules.old_fmri_module import SAVE_DIR_FMRI
-from sasc.modules.fmri_module import get_train_story_texts
-from sasc.modules.dictionary_learning.utils import (
-    get_exp_data,
-    get_baseline_data,
+
+from neuro.sasc.data.d3 import TASKS_D3
+from neuro.sasc.data.toy import TASKS_TOY
+from neuro.sasc.modules.dictionary_learning.utils import (
     SAVE_DIR_DICT,
+    get_baseline_data,
+    get_exp_data,
 )
-from os.path import join
-import re
+from neuro.sasc.modules.fmri_module import get_train_story_texts
+from neuro.sasc.modules.old_fmri_module import SAVE_DIR_FMRI
 
 TASKS = {**TASKS_D3, **TASKS_TOY}
 

@@ -1,8 +1,9 @@
-import numpy as np
-import logging
-from neuro.data.utils import mult_diag, counter
-import random
 import itertools as itools
+import logging
+
+import numpy as np
+
+from neuro.data.utils import counter, mult_diag
 
 
 def zs(v): return (v-v.mean(0))/v.std(0)  # z-score function

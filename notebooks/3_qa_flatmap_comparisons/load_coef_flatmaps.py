@@ -1,25 +1,18 @@
-from neuro.features.qa_questions import get_questions, get_merged_questions_v3_boostexamples
-from neuro import analyze_helper, viz
-from tqdm import tqdm
-import sys
-from ridge_utils.DataSequence import DataSequence
-import pandas as pd
-import os
-import matplotlib.pyplot as plt
-import cortex
-import seaborn as sns
-from os.path import join
 from collections import defaultdict
-import neuro.config as config
-import numpy as np
-import joblib
-import dvu
-import sys
-import neuro.flatmaps_helper
+from os.path import join
 
+import joblib
+import numpy as np
+import pandas as pd
+from tqdm import tqdm
+
+import neuro.config as config
+import neuro.flatmaps_helper
+from neuro.features.qa_questions import (
+    get_merged_questions_v3_boostexamples,
+    get_questions,
+)
 from neuro.features.questions.gpt4 import QS_35_STABLE
-# sys.path.append('../notebooks')
-# flatmaps_per_question = __import__('06_flatmaps_per_question')
 
 
 def _load_coefs_shapley(rr, subject='S02', qa_questions_version='v3_boostexamples_merged'):

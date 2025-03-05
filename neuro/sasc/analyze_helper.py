@@ -1,13 +1,14 @@
-from collections import defaultdict
-import numpy as np
 import re
-from matplotlib.backends.backend_pdf import PdfPages
-import matplotlib.pyplot as plt
-from sklearn.decomposition import PCA
-import imodelsx.linear_finetune
 import string
+from collections import defaultdict
 from typing import List
+
+import imodelsx.linear_finetune
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
+from matplotlib.backends.backend_pdf import PdfPages
+from sklearn.decomposition import PCA
 
 
 def _remove_punc(s):

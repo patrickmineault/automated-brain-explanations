@@ -1,5 +1,5 @@
-import numpy as np
 from neuro.analyze_helper import abbrev_question
+
 LOOSE_MATCHES = {
     'Does the sentence involve the mention of a specific object or item?',
     'Does the input include a comparison or metaphor?',

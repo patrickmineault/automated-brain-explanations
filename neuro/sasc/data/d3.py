@@ -1,13 +1,12 @@
-from functools import partial
 import json
-
-import os
-import pandas as pd
-from os.path import dirname
+from functools import partial
 from os.path import join as oj
 
-D3_PROCESSED_DIR = oj(
-    dirname(os.path.abspath(__file__)), 'd3_processed')
+import pandas as pd
+
+from neuro import config
+
+D3_PROCESSED_DIR = oj(config.REPO_DIR, 'data', 'd3', 'd3_processed')
 DESCRIPTIONS_DICT = json.load(open(
     oj(D3_PROCESSED_DIR, 'task_defs.json'), 'r')
 )
@@ -25,9 +24,6 @@ def fetch_data(task_name, return_df=False):
         return df
     else:
         return df['input'].values.tolist()
-
-
-
 
 
 # Note: I have only manually checked the first 20 datasets here
@@ -425,4 +421,3 @@ if __name__ == '__main__':
     print(df['label'].head())
     for i in range(10):
         print(df[df['label'] == 1][['input', 'label']].iloc[i]['input'])
-    

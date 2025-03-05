@@ -1,16 +1,19 @@
+import json
+import os
+from os.path import join
+from typing import Dict
+
+import joblib
 import numpy as np
+
 import neuro.config as config
 from neuro.data.data_sequence import DataSequence
 from neuro.data.utils_ds import make_word_ds
-import json
-from typing import Dict, List
-import os
-from os.path import join, dirname
-import joblib
 
 
 def load_story_wordseqs(stories) -> Dict[str, DataSequence]:
     from neuro.data.textgrid import TextGrid
+
     # load textgrids
     base = join(config.FMRI_DIR_BLOB, 'data', "ds003020/derivative/TextGrids")
     grids = {}

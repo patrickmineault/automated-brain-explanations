@@ -1,12 +1,14 @@
+from typing import List
+
+import bert_score
 import numpy as np
 import pandas as pd
 import torch
-from transformers import T5ForConditionalGeneration, T5Tokenizer
-from tqdm import tqdm, trange
 import torch.nn
-from typing import List
+from tqdm import tqdm, trange
+from transformers import T5ForConditionalGeneration, T5Tokenizer
+
 import neuro.sasc.data.data
-import bert_score
 
 
 def compute_score_contains_keywords(args, explanation_strs):

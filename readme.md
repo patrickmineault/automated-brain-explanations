@@ -1,4 +1,4 @@
-<h1 align="center">   <img src="https://microsoft.github.io/augmented-interpretable-models/auggam_gif.gif" width="25%"> Automated brain explanations <img src="https://microsoft.github.io/augmented-interpretable-models/auggam_gif.gif" width="25%"></h1>
+<h1 align="center">   🧠 Automated brain explanations 🧠</h1>
 <p align="center">
 <img src="https://img.shields.io/badge/license-mit-blue.svg">
   <img src="https://img.shields.io/badge/python-3.9--3.11-blue">
@@ -10,7 +10,7 @@ Along the way, we've used LLMs to help us predict and explain patterns in this d
 This repo contains code for doing these analyses & applying the tools we've developed to various domains.
 
 ### Reference
-This repo contains the code underlying two neuroscience studies:
+**This repo contains code underlying two neuroscience studies:**
 
 <details>
 <summary>Generative causal testing to bridge data-driven models and scientific theories in language neuroscience (<a href="https://arxiv.org/abs/2410.00812">Antonello*, Singh*, et al., 2024, arXiv</a>)
@@ -24,7 +24,7 @@ This repo contains the code underlying two neuroscience studies:
 </details>
 <br>
 
-and three ML papers (for a simple scikit-learn interface to use these, see the [imodelsX library](https://github.com/csinva/imodelsX)):
+**This repo also contains code for experiments in three ML papers** (for a simple scikit-learn interface to use these, see [imodelsX](https://github.com/csinva/imodelsX)):
 <details>
 <summary>Augmenting interpretable models with large language models during training (<a href="https://www.nature.com/articles/s41467-023-43713-1">Singh et al. 2023, Nature communications</a>)
 </summary>

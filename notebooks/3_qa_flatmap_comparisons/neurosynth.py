@@ -1,9 +1,9 @@
+import os
 from collections import defaultdict
 from copy import deepcopy
-import os
-import cortex
 from os.path import join
 
+import cortex
 import joblib
 import numpy as np
 from tqdm import tqdm
@@ -325,7 +325,6 @@ def get_neurosynth_flatmaps(subject='UTS01', neurosynth_dir='/home/chansingh/mnt
         return mni_array
 
     def _load_flatmap(term, neurosynth_dir, subject):
-        import nibabel as nib
         subject_s = subject.replace('UT', '')
         # output_file = join(neurosynth_dir, f'{term}_association-test_z.nii.gz')
         output_file = join(

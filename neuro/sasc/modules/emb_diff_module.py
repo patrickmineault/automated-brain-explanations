@@ -1,25 +1,17 @@
-import logging
-from typing import List
-import warnings
-import datasets
-from transformers import pipeline
-import numpy as np
-from tqdm import tqdm
-import sklearn.preprocessing
-from spacy.lang.en import English
-import imodelsx
-import imodelsx.util
-import pickle as pkl
-from os.path import dirname, join
-from tqdm import trange
 import os.path
-import torch
-import re
+import warnings
+from os.path import dirname
+from typing import List, Union
+
+import numpy as np
 import scipy.spatial.distance
-import neuro.sasc.data.data
-from typing import Union
-from neuro.sasc.data.data import TASKS
 from InstructorEmbedding import INSTRUCTOR
+from tqdm import tqdm, trange
+from transformers import pipeline
+
+import neuro.sasc.data.data
+from neuro.sasc.data.data import TASKS
+
 modules_dir = dirname(os.path.abspath(__file__))
 
 
@@ -36,7 +28,7 @@ class EmbDiffModule():
         ------
         """
         if use_instructor:
-            print(f'loading hkunlp/instructor-xl...')
+            print('loading hkunlp/instructor-xl...')
             self.extract_embs = INSTRUCTOR('hkunlp/instructor-xl')
         else:
             print(f'loading {checkpoint}...')
@@ -72,7 +64,7 @@ class EmbDiffModule():
 
     def _get_emb(self, x: Union[str, List[str]]) -> np.ndarray:
         if self.use_instructor:
-            instruction = f"Represent the short phrase for clustering: "
+            instruction = "Represent the short phrase for clustering: "
             if isinstance(x, str):
                 embs = self.extract_embs.encode([[instruction, x]])
                 return embs[0]

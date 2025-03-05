@@ -1,19 +1,18 @@
-import re
-import logging
-from typing import List
-import numpy as np
-import random
-from tqdm import tqdm
-import pickle as pkl
-from os.path import dirname, join
 import os.path
+import random
+import re
+from os.path import dirname, join
+from typing import List
+
+import joblib
+import numpy as np
 import torch.cuda
-from transformers import BertTokenizerFast, BertModel, BertForMaskedLM, AutoTokenizer
 from datasets import load_dataset
+from tqdm import tqdm
+from transformers import AutoTokenizer, BertModel, BertTokenizerFast
 
 from neuro.sasc.modules.dictionary_learning import sparsify_PyTorch
 from neuro.sasc.modules.dictionary_learning.utils import batch_up
-import joblib
 
 modules_dir = dirname(os.path.abspath(__file__))
 SAVE_DIR_DICT = join(modules_dir, 'dictionary_learning')

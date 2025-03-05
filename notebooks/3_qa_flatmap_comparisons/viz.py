@@ -1,21 +1,14 @@
-from neuro.features.qa_questions import get_questions, get_merged_questions_v3_boostexamples
-from neuro import analyze_helper, viz
-from neuro import config
-from tqdm import tqdm
-import sys
-from ridge_utils.DataSequence import DataSequence
-import pandas as pd
 import os
-import matplotlib.pyplot as plt
-import cortex
-import seaborn as sns
 from os.path import join
-from collections import defaultdict
-import numpy as np
-from sklearn.preprocessing import StandardScaler
-import joblib
+
 import dvu
-import sys
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
+from sklearn.preprocessing import StandardScaler
+from tqdm import tqdm
+
 # sys.path.append('../notebooks')
 # flatmaps_per_question = __import__('06_flatmaps_per_question')
 
