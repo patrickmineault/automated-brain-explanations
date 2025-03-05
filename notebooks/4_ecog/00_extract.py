@@ -1,5 +1,6 @@
-from neuro.ecog.questions import QS_O1_DEC26, QS_O1_DEC26_2
-from neuro.ecog.config import STORIES_POPULAR, STORIES_UNPOPULAR, STORIES_LOTR, ECOG_DIR
+from neuro.ecog.questions import QS_O1_DEC26, QS_O1_DEC26_2, STORIES_POPULAR, STORIES_UNPOPULAR, STORIES_LOTR
+from neuro import config
+
 from imodelsx.qaemb.qaemb import QAEmb, get_sample_questions_and_examples
 import neuro.ecog.questions as questions
 from math import ceil
@@ -163,10 +164,10 @@ if __name__ == "__main__":
     checkpoint_clean = args.checkpoint.replace('/', '___')
 
     transcript_folders = os.listdir(
-        join(ECOG_DIR, 'treebank_data', 'transcripts'))
-    output_dir_clean = join(ECOG_DIR, f'features{suffix_qs}',
+        join(config.ECOG_DIR, 'treebank_data', 'transcripts'))
+    output_dir_clean = join(config.ECOG_DIR, f'features{suffix_qs}',
                             checkpoint_clean, args.setting)
-    output_dir_raw = join(ECOG_DIR, f'features_raw{suffix_qs}',
+    output_dir_raw = join(config.ECOG_DIR, f'features_raw{suffix_qs}',
                           checkpoint_clean, args.setting)
     os.makedirs(output_dir_clean, exist_ok=True)
     os.makedirs(output_dir_raw, exist_ok=True)
@@ -196,7 +197,7 @@ if __name__ == "__main__":
         )
         assert story_fname in transcript_folders, f'{story_fname} not found'
         features_df = pd.read_csv(
-            join(ECOG_DIR, 'treebank_data', 'transcripts', story_fname, 'features.csv'))
+            join(config.ECOG_DIR, 'treebank_data', 'transcripts', story_fname, 'features.csv'))
         features_df['end'] = features_df['end'].interpolate()
         features_df['text'] = features_df['text'].fillna('')
 

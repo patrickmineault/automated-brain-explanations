@@ -31,6 +31,10 @@ EM_DATA_DIR = join(FMRI_DIR_BLOB, 'data', 'eng1000')
 NLP_UTILS_DIR = join(FMRI_DIR_BLOB, 'nlp_utils')
 
 
+############## ECOG ###################
+ECOG_DIR = join(MNT_DIR, 'ecog')
+
+
 def setup_freesurfer():
     # set os environ SUBJECTS_DIR
     FREESURFER_VARS = {

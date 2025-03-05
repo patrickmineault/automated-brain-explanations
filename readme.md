@@ -52,6 +52,7 @@ explanation_dict = explain_module_sasc(
 # Setting up
 
 **Dataset**
+- The `data/decoding` folder contains a quickstart easy example for TR-level decoding
 - to quickstart, just download the responses / wordsequences for 3 subjects from the [encoding scaling laws paper](https://utexas.app.box.com/v/EncodingModelScalingLaws/folder/230420528915)
   - this is all the data you need if you only want to analyze 3 subjects and don't want to make flatmaps
 - to run Eng1000, need to grab `em_data` directory from [here](https://github.com/HuthLab/deep-fMRI-dataset) and move its contents to `{root_dir}/em_data`

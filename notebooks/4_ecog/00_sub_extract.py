@@ -18,7 +18,7 @@ LLAMA70B_fewshot = 'meta-llama/Meta-Llama-3-70B-Instruct-fewshot'
 MIXTMOE = 'mistralai/Mixtral-8x7B-Instruct-v0.1'
 
 params_shared_dict = {
-    'save_dir': ['/home/chansingh/fmri/results/ecog'],
+    'save_dir': [join(path_to_file, 'ecog_results')],
     # 'seed_stories': range(2),
     # 'checkpoint': [LLAMA8B, MIST7B, GEMMA7B],
     # 'checkpoint': [MIXTMOE],
