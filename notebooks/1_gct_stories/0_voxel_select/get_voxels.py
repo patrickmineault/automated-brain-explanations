@@ -7,11 +7,11 @@ from tqdm import tqdm
 import pandas as pd
 from typing import Dict, List
 import numpy as np
-import sasc.viz
+# import sasc.viz
 from pprint import pprint
 import joblib
 from collections import defaultdict
-from sasc.config import RESULTS_DIR, REPO_DIR
+# from sasc.config import RESULTS_DIR, REPO_DIR
 from typing import Tuple
 import sys
 import json

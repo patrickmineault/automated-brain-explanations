@@ -7,12 +7,11 @@ from tqdm import tqdm
 import pandas as pd
 from typing import List
 import numpy as np
-import sasc.generate_helper
-import sasc.viz
+import neuro.sasc.generate_helper
 from pprint import pprint
 import joblib
 from collections import defaultdict
-from sasc.config import RESULTS_DIR, REPO_DIR
+from neuro.config import RESULTS_DIR, REPO_DIR
 from typing import Tuple
 import sys
 import json

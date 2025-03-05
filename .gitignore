@@ -165,3 +165,6 @@ sasc/config.py
 **.png
 **.nii.gz
 **.gz
+joblib
+**.pdf
+**.zip
