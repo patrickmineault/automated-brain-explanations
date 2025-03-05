@@ -1,12 +1,14 @@
 from copy import deepcopy
 from typing import List
-import torch
+
 import numpy as np
+import pandas as pd
+import torch
+
 import neuro.features.feature_spaces as feature_spaces
-from neuro.features.questions.merge_v3_boostexamples import DICT_MERGE_V3_BOOSTEXAMPLES
 import neuro.features.qa_questions as qa_questions
 from neuro.data.npp import zscore
-import pandas as pd
+from neuro.features.questions.merge_v3_boostexamples import DICT_MERGE_V3_BOOSTEXAMPLES
 
 
 def get_features_full(

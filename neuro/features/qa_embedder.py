@@ -16,18 +16,21 @@ Note: imodelsx has a more up to date version of this file
 """
 
 
-import scipy.special
-import numpy as np
+from os.path import expanduser, join
 from typing import List
-from os.path import join, expanduser, dirname
-from tqdm import tqdm
+
 import imodelsx.llm
-import neuro.features.qa_questions as qa_questions
+import numpy as np
 import pandas as pd
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, AdamW, AutoModel
+import scipy.special
 import torch
 from torch import nn
+from tqdm import tqdm
+from transformers import AutoModel, AutoTokenizer
+
 import neuro.config as config
+import neuro.features.qa_questions as qa_questions
+
 # from vllm import LLM, SamplingParams
 # import torch
 

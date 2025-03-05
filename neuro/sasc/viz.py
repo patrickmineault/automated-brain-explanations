@@ -1,15 +1,17 @@
-import matplotlib
-from matplotlib.cm import ScalarMappable
-from matplotlib.colors import Normalize
-import numpy as np
-import matplotlib.pyplot as plt
-from typing import List
-import seaborn as sns
-from matplotlib.backends.backend_pdf import PdfPages
-from os.path import join, dirname
 import os
 import os.path
+from os.path import dirname, join
+from typing import List
+
 import cortex
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+from matplotlib.backends.backend_pdf import PdfPages
+from matplotlib.cm import ScalarMappable
+from matplotlib.colors import Normalize
+
 # import matplotlib.colormaps
 
 # default matplotlib colors
@@ -351,8 +353,8 @@ def barplot_default(
     print('mean', diag_mean - off_diag_mean)
     # plt.title(f'use_clusters={use_clusters}')
     # plt.title('Single voxel', y=0.9)
-    plt.savefig(join(neuro.sasc.config.RESULTS_DIR, 'figs/main',
-                pilot_name[:pilot_name.index('_')] + '_default_means.pdf'), bbox_inches='tight')
+    plt.savefig(join(pilot_name[:pilot_name.index(
+        '_')] + '_default_means.pdf'), bbox_inches='tight')
 
 
 def barplot_interaction(
@@ -429,8 +431,8 @@ def barplot_interaction(
     # move title down into plot
     # plt.title('Voxel interaction', y=0.9)
     # plt.title(f'use_clusters={use_clusters}')
-    plt.savefig(join(neuro.sasc.config.RESULTS_DIR, 'figs/main',
-                     pilot_name[:pilot_name.index('_')] + '_interaction_means.pdf'), bbox_inches='tight')
+    plt.savefig(join(pilot_name[:pilot_name.index(
+        '_')] + '_interaction_means.pdf'), bbox_inches='tight')
 
 
 def barplot_polysemantic(

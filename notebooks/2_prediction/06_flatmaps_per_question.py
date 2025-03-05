@@ -1,20 +1,20 @@
-import cortex
-from tqdm import tqdm
-import joblib
-import neuro.features.qa_questions as qa_questions
-import numpy as np
-from os.path import join
-from matplotlib import pyplot as plt
-from copy import deepcopy
-import pandas as pd
-import os
-from os.path import dirname
-import seaborn as sns
-import dvu
-from neuro import analyze_helper
-import sys
 import json
+import os
+import sys
+from os.path import dirname, join
+
+import cortex
+import dvu
+import joblib
+import numpy as np
+import pandas as pd
+from matplotlib import pyplot as plt
+from tqdm import tqdm
+
+import neuro.features.qa_questions as qa_questions
 import neuro.flatmaps_helper
+from neuro import analyze_helper
+
 sys.path.append('..')
 fit_encoding = __import__('02_fit_encoding')
 path_to_repo = dirname(dirname(os.path.abspath(__file__)))

@@ -1,23 +1,15 @@
+import os
+import sys
+from os.path import dirname, join
+
+import analyze_helper
 import cortex
-from tqdm import tqdm
-import joblib
 import imodelsx.process_results
 import numpy as np
-from os.path import join
 from matplotlib import pyplot as plt
-from copy import deepcopy
-import pandas as pd
-import os
-from os.path import dirname
-import seaborn as sns
-import dvu
-import analyze_helper
-import sys
-import json
-import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib.colors import Normalize
 from matplotlib.cm import ScalarMappable
+from matplotlib.colors import Normalize
+
 sys.path.append('..')
 path_to_repo = dirname(dirname(os.path.abspath(__file__)))
 

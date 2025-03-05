@@ -1,19 +1,18 @@
-from neuro.features.qa_embedder import MutiTaskClassifier
 import os
-import pandas as pd
+from collections import defaultdict
 from os.path import join
-import numpy as np
+
 import joblib
-from tqdm import tqdm
+import numpy as np
+import pandas as pd
 import torch
 from torch import nn
-from torch.utils.data import DataLoader
 from torch.optim import AdamW
-from transformers import AutoTokenizer, AdamW
-from torch.utils.data import Dataset
-from collections import defaultdict
-import sys
+from torch.utils.data import DataLoader, Dataset
+from tqdm import tqdm
+from transformers import AdamW, AutoTokenizer
 
+from neuro.features.qa_embedder import MutiTaskClassifier
 
 # from peft import LoraConfig, LoraModel, get_peft_model, TaskType
 
@@ -84,7 +83,7 @@ if __name__ == '__main__':
     checkpoint = 'roberta-large'
     # checkpoint = 'distilbert-base-uncased'
     # batch_size = 64 # 1 gpu
-    save_dir = join(path_to_repo, f'../qa_results/finetune')
+    save_dir = join(path_to_repo, '../qa_results/finetune')
     # batch_size = 256  # 4 gpus bert-base-uncased
     # batch_size = 256  # 4 gpus roberta-base
     batch_size = 80  # 4 gpus roberta-large

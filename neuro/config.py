@@ -1,5 +1,6 @@
-from os.path import join, expanduser, dirname, abspath
 import os.path
+from os.path import abspath, dirname, expanduser, join
+
 path_to_file = os.path.dirname(abspath(__file__))
 REPO_DIR = dirname(path_to_file)
 if 'chansingh' in expanduser('~'):
@@ -11,6 +12,9 @@ FMRI_DIR_BLOB = join(MNT_DIR, 'deep-fMRI')
 RESULTS_DIR_LOCAL = join(REPO_DIR, 'results')
 NEUROSYNTH_DATA_DIR = join(FMRI_DIR_BLOB, 'qa', 'neurosynth_data')
 
+# save fitted model
+BEST_RESULTS_DIR_ENSEMBLE = join(FMRI_DIR_BLOB, 'encoding', 'may7')
+SPARSE_FEATS_DIR = join(FMRI_DIR_BLOB, 'qa', 'sparse_feats_shared')
 
 STORIES_DIR_GCT = join(RESULTS_DIR_LOCAL, "stories")
 SAVE_DIR_FMRI = join(FMRI_DIR_BLOB, 'sasc', 'rj_models')

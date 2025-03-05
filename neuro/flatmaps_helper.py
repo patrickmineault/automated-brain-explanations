@@ -1,8 +1,10 @@
 from copy import deepcopy
+from os.path import join
+
 import joblib
 import numpy as np
-import sys
-from os.path import abspath, dirname, join
+
+import neuro.analyze_helper
 from neuro import config
 
 FLATMAPS_DIR = join(config.FMRI_DIR_BLOB, 'brain_tune', 'flatmaps_all')
@@ -113,7 +115,7 @@ def load_custom_rois(subject, suffix_setting='_fedorenko'):
     if suffix_setting == '':
         # rois_dict = joblib.load(join(regions_idxs_dir, f'rois_{subject}.jbl'))
         # rois = joblib.load(join(FMRI_DIR, 'brain_tune/voxel_neighbors_and_pcs/', 'communication_rois_UTS02.jbl'))
-        rois = joblib.load(join(FMRI_DIR, 'brain_tune/voxel_neighbors_and_pcs/',
+        rois = joblib.load(join(config.FMRI_DIR_BLOB, 'brain_tune/voxel_neighbors_and_pcs/',
                                 f'communication_rois_v2_UT{subject}.jbl'))
         rois_dict_raw = {i: rois[i] for i in range(len(rois))}
         if subject == 'S02':
@@ -137,16 +139,59 @@ def load_custom_rois(subject, suffix_setting='_fedorenko'):
     elif suffix_setting == '_fedorenko':
         if subject == 'S03':
             rois_fedorenko = joblib.load(join(
-                FMRI_DIR, 'brain_tune/voxel_neighbors_and_pcs/', 'lang_localizer_UTS03.jbl'))
+                config.FMRI_DIR_BLOB, 'brain_tune/voxel_neighbors_and_pcs/', 'lang_localizer_UTS03.jbl'))
         elif subject == 'S02':
             rois_fedorenko = joblib.load(join(
-                FMRI_DIR, 'brain_tune/voxel_neighbors_and_pcs/', 'lang_localizer_UTS02_aligned.jbl'))
+                config.FMRI_DIR_BLOB, 'brain_tune/voxel_neighbors_and_pcs/', 'lang_localizer_UTS02_aligned.jbl'))
         return {
             'Lang-' + str(i): rois_fedorenko[i] for i in range(len(rois_fedorenko))
         }
         # rois_dict = rois_dict_raw
     elif suffix_setting == '_spotlights':
         rois_spotlights = joblib.load(join(
-            FMRI_DIR, 'brain_tune/voxel_neighbors_and_pcs/', f'all_spotlights_UT{subject}.jbl'))
+            config.FMRI_DIR_BLOB, 'brain_tune/voxel_neighbors_and_pcs/', f'all_spotlights_UT{subject}.jbl'))
         return {'spot' + str(i): rois_spotlights[i][-1]
                 for i in range(len(rois_spotlights))}
+
+
+ROI_EXPLANATIONS_S03 = {
+    'EBA': 'Body parts',
+    'IPS': 'Descriptive elements of scenes or objects',
+    'OFA': 'Conversational transitions',
+    'OPA': 'Direction and location descriptions',
+    'OPA_only': 'Self-reflection and growth',
+    'PPA': 'Scenes and settings',
+    'PPA_only': 'Garbage, food, and household items',
+    'RSC': 'Travel and location names',
+    'RSC_only': 'Location names',
+    'sPMv': 'Dialogue and responses',
+}
+
+FED_DRIVING_EXPLANATIONS_S03 = {
+    0: 'Relationships',
+    1: 'Positive Emotional Reactions',
+    2: 'Body parts',
+    3: 'Dialogue',
+    4: 'Negative Emotional Reactions',
+}
+
+FED_DRIVING_EXPLANATIONS_S02 = {
+    0: 'Secretive Or Covert Actions',
+    1: 'Introspection',
+    2: 'Relationships',
+    3: 'Sexual and Romantic Interactions',
+    4: 'Dialogue',
+}
+
+
+def load_known_rois(subject):
+    nonzero_entries_dict = joblib.load(
+        join(config.REGION_IDXS_DIR, f'rois_{subject}.jbl'))
+    rois_dict = {}
+    for k, v in nonzero_entries_dict.items():
+        mask = np.zeros(neuro.analyze_helper.VOX_COUNTS[subject])
+        mask[v] = 1
+        rois_dict[k] = deepcopy(mask)
+    if subject == 'S03':
+        rois_dict['OPA'] = rois_dict['TOS']
+    return rois_dict

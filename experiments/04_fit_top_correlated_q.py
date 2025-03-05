@@ -1,19 +1,19 @@
 import argparse
-from copy import deepcopy
 import logging
-from collections import defaultdict
-from os.path import join
-import numpy as np
-import joblib
 import os.path
+from collections import defaultdict
+from copy import deepcopy
+from os.path import join
+
 import imodelsx.cache_save_utils
-import neuro.features.qa_questions
 import joblib
-from neuro.features import feature_utils
-from neuro.data.response_utils import get_resps_full
-from tqdm import tqdm
+import numpy as np
 
 import neuro.data.story_names
+import neuro.features.qa_questions
+from neuro.data.response_utils import get_resps_full
+from neuro.features import feature_utils
+
 path_to_repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # initialize args
@@ -93,11 +93,11 @@ if __name__ == "__main__":
     )
 
     if args.use_cache and already_cached:
-        logging.info(f"cached version exists! Successfully skipping :)\n\n\n")
+        logging.info("cached version exists! Successfully skipping :)\n\n\n")
         exit(0)
     for k in sorted(vars(args)):
         logger.info("\t" + k + " " + str(vars(args)[k]))
-    logging.info(f"\n\n\tsaving to " + save_dir_unique + "\n")
+    logging.info("\n\n\tsaving to " + save_dir_unique + "\n")
 
     story_names_train = neuro.data.story_names.get_story_names(
         args.subject, train_or_test='train', use_huge=args.use_huge)

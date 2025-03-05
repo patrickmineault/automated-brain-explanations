@@ -1,17 +1,14 @@
 import os
+from os.path import dirname, join
+
 import matplotlib.pyplot as plt
-from os.path import join, dirname
-from tqdm import tqdm
-import joblib
 import numpy as np
 import sasc.viz
-import pandas as pd
-
+from sasc.modules.fmri_module import convert_module_num_to_voxel_num
 
 path_to_current_file = dirname(os.path.abspath(__file__))
 path_to_repo = dirname(path_to_current_file)
 story_generate = __import__("01_generate_story")
-from sasc.modules.fmri_module import convert_module_num_to_voxel_num
 
 if __name__ == "__main__":
     subject = "UTS02"
@@ -43,7 +40,8 @@ if __name__ == "__main__":
         version="v5_noun",
     )
     rows["voxel_num"] = rows.apply(
-        lambda row: convert_module_num_to_voxel_num(row["module_num"], row["subject"]),
+        lambda row: convert_module_num_to_voxel_num(
+            row["module_num"], row["subject"]),
         axis=1,
     )
     voxel_nums = rows["voxel_num"].values
@@ -54,7 +52,8 @@ if __name__ == "__main__":
     sasc.viz.quickshow(
         resp_arr,
         subject="UTS02",
-        fname_save=join(path_to_repo, "results", "pilot_plots", "voxel_locations"),
+        fname_save=join(path_to_repo, "results",
+                        "pilot_plots", "voxel_locations"),
     )
     plt.cla()
     plt.close()

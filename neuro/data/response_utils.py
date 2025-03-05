@@ -1,21 +1,24 @@
 # from neuro.data.npp import mcorr
 # from typing import List
 # import json
-from os.path import join, dirname
-# from multiprocessing.pool import ThreadPool
-import h5py
-import pathlib
+import logging
+import os
+
 # import time
 import os.path
+import pathlib
+from os.path import join
+
+# from multiprocessing.pool import ThreadPool
+import h5py
+import joblib
+import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
-from os.path import join
-import logging
-import numpy as np
-import joblib
-import os
-import neuro.features
+
 import neuro.config as config
+import neuro.features
+
 # import random
 
 
@@ -23,7 +26,7 @@ def load_response(stories, subject):
     """Get the subject"s fMRI response for stories."""
     main_path = pathlib.Path(__file__).parent.parent.resolve()
     subject_dir = join(
-        config.root_dir, 'data', f"ds003020/derivative/preprocessed_data/{subject}")
+        config.FMRI_DIR_BLOB, 'data', f"ds003020/derivative/preprocessed_data/{subject}")
     base = os.path.join(main_path, subject_dir)
     resp = []
     for story in stories:
@@ -35,16 +38,16 @@ def load_response(stories, subject):
 
 
 def load_response_huge(stories, subject):
-    resps = joblib.load(join(config.root_dir, 'data',
+    resps = joblib.load(join(config.FMRI_DIR_BLOB, 'data',
                              'huge_data', f'{subject}_responses.jbl'))
     return np.vstack([resps[story] for story in stories])
 
 
 def load_response_brain_drive(stories):
-    df = joblib.load(join(config.brain_drive_resps_dir, 'metadata.pkl'))
+    df = joblib.load(join(config.GEMV_RESPS_DIR, 'metadata.pkl'))
     df_filt = df.loc[stories]
     resps = []
-    file_paths = (config.brain_drive_resps_dir + '/' +
+    file_paths = (config.GEMV_RESPS_DIR + '/' +
                   df_filt['session'] + '/' + df_filt['resp_file']).to_list()
     for file_path in file_paths:
         resp = np.load(file_path)
@@ -65,11 +68,11 @@ def load_response_wrapper(args, stories, subject, use_brain_drive=False):
 
 def load_pca(subject, pc_components=None):
     if pc_components == 100:
-        pca_filename = join(config.resp_processing_dir,
+        pca_filename = join(config.RESP_PROCESSING_DIR,
                             subject, 'resps_pca_100.pkl')
         return joblib.load(pca_filename)
     else:
-        pca_filename = join(config.resp_processing_dir,
+        pca_filename = join(config.RESP_PROCESSING_DIR,
                             subject, 'resps_pca.pkl')
         pca = joblib.load(pca_filename)
         pca.components_ = pca.components_[

@@ -1,7 +1,9 @@
 import os
-from os.path import dirname, join, expanduser
 import sys
+from os.path import dirname, expanduser, join
+
 from imodelsx import submit_utils
+
 path_to_file = os.path.dirname(os.path.abspath(__file__))
 repo_dir = dirname(dirname(os.path.abspath(__file__)))
 sys.path.append(repo_dir)
@@ -16,8 +18,6 @@ LLAMA11B = 'meta-llama/Llama-3.2-11B-Vision-Instruct'
 LLAMA70B = 'meta-llama/Meta-Llama-3-70B-Instruct'
 LLAMA70B_fewshot = 'meta-llama/Meta-Llama-3-70B-Instruct-fewshot'
 MIXTMOE = 'mistralai/Mixtral-8x7B-Instruct-v0.1'
-
-BEST_RUN = '/home/chansingh/mntv1/deep-fMRI/encoding/results_apr7/68936a10a548e2b4ce895d14047ac49e7a56c3217e50365134f78f990036c5f7'
 
 params_shared_dict = {
     # things to average over

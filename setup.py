@@ -18,11 +18,16 @@ required_pypi = [
     'langchain',
     'openai',
     'accelerate',
-    'InstructorEmbedding',  # embeddings for emb_diff_module
-    'sentence-transformers',  # embeddings for emb_diff_module
-    'bert-score',
     'datasets',  # optional, required for getting NLP datasets
     'pytest',  # optional, required for running tests
+
+    # for fitting encoding models
+    'ridge_utils',
+
+    # for sasc
+    # 'InstructorEmbedding',  # embeddings for emb_diff_module
+    # 'sentence-transformers',  # embeddings for emb_diff_module
+    # 'bert-score',
 ]
 
 setuptools.setup(

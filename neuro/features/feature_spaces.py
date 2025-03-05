@@ -1,27 +1,25 @@
-from copy import deepcopy
+import logging
 import os
-from dict_hash import sha256
+from copy import deepcopy
+from os.path import dirname, join
+from typing import Dict, List
+
 import datasets
+import imodelsx.llm
 import joblib
 import numpy as np
-import json
-import pandas as pd
-from os.path import join, dirname
-from functools import partial
-import neuro.features.qa_questions as qa_questions
-from neuro.data.data_sequence import DataSequence
-from typing import Dict, List
+from dict_hash import sha256
 from tqdm import tqdm
-from neuro.data.interp_data import lanczosinterp2D, expinterp2D
+from transformers import pipeline
+
+import neuro.config as config
+import neuro.features.qa_questions as qa_questions
+from neuro.data.interp_data import expinterp2D, lanczosinterp2D
 from neuro.data.semantic_model import SemanticModel
 from neuro.data.utils_ds import apply_model_to_words
+from neuro.features.qa_embedder import FinetunedQAEmbedder, QuestionEmbedder
 from neuro.features.questions.gpt4 import QS_35_STABLE, QS_HYPOTHESES_COMPUTED
-from transformers import pipeline
-import logging
-import imodelsx.llm
-from neuro.features.qa_embedder import QuestionEmbedder, FinetunedQAEmbedder
-import neuro.config as config
-from neuro.features.stim_utils import load_story_wordseqs, load_story_wordseqs_huge, load_story_wordseqs_wrapper
+from neuro.features.stim_utils import load_story_wordseqs_wrapper
 
 
 def downsample_word_vectors(stories, word_vectors, wordseqs, strategy='lanczos'):
@@ -374,7 +372,7 @@ def _get_kwargs_extra(args):
 
 def get_features(args, feature_space, **kwargs):
     kwargs_extra = _get_kwargs_extra(args)
-    logging.info(f'getting wordseqs..')
+    logging.info('getting wordseqs..')
     wordseqs = load_story_wordseqs_wrapper(
         kwargs['story_names'], kwargs['use_huge'], kwargs['use_brain_drive'])
 

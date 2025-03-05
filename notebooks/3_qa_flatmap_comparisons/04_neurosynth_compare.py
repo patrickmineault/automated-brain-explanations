@@ -1,22 +1,21 @@
-from cortex import mni
-import neurosynth
-import viz
-from neurosynth import term_dict, term_dict_rev, get_neurosynth_flatmaps
-# from neuro import viz
-from neuro import config
-from neuro import analyze_helper
-import sys
-import pandas as pd
 import os
-import matplotlib.pyplot as plt
-import cortex
-from os.path import join
-from collections import defaultdict
-import numpy as np
-import joblib
-from tqdm import tqdm
 import sys
-from copy import deepcopy
+from collections import defaultdict
+from os.path import join
+
+import cortex
+import joblib
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import viz
+from cortex import mni
+from neurosynth import get_neurosynth_flatmaps
+from tqdm import tqdm
+
+# from neuro import viz
+from neuro import analyze_helper, config
+
 sys.path.append('../notebooks')
 os.environ["FSLDIR"] = "/home/chansingh/fsl"
 
@@ -116,7 +115,7 @@ def compute_corrs_df(frac_voxels_to_keep, subjects, flatmaps_qa_dicts_by_subject
 
 
 def plot_corrs_df(
-        corrs_df, out_dir, plot_val=f'corrs_0.1',
+        corrs_df, out_dir, plot_val='corrs_0.1',
         xlab='Flatmap correlation'
 ):
 

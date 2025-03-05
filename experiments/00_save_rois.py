@@ -1,11 +1,10 @@
-import cortex
-from collections import defaultdict
-import neuro.config
-from copy import deepcopy
-import pandas as pd
 from os.path import join
+
+import cortex
+import pandas as pd
 from tqdm import tqdm
 
+import neuro.config
 
 # def save_voxel_roi_dfs():
 dfs = []
@@ -40,4 +39,4 @@ os.makedirs(save_dir, exist_ok=True)
 rois_df = pd.concat(dfs)
 rois_df = rois_df.groupby(['voxel_num', 'subject'])[
     'roi'].apply(list).reset_index()
-rois_df.to_pickle(join(save_dir, f'voxel_roi_df.pkl'))
+rois_df.to_pickle(join(save_dir, 'voxel_roi_df.pkl'))

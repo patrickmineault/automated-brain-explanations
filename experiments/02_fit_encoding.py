@@ -1,27 +1,30 @@
-from collections import defaultdict
-import os.path
-from copy import deepcopy
-
-from tqdm import tqdm
-import torch
-import random
-import logging
-from sklearn.ensemble import RandomForestRegressor
-from os.path import join, dirname
 import argparse
-import numpy as np
-import joblib
+import logging
 import os
-from neuro.data import response_utils
-from neuro.features import feature_utils, feat_select
-from neuro.encoding.ridge import bootstrap_ridge, gen_temporal_chunk_splits
-import imodelsx.cache_save_utils
-import neuro.data.story_names as story_names
-from neuro.features.questions.gpt4 import QUESTIONS_GPT4, QS_HYPOTHESES_COMPUTED
+import os.path
 import random
-import warnings
 import time
-from neuro.encoding.eval import nancorr, evaluate_pc_model_on_each_voxel, add_summary_stats
+from collections import defaultdict
+from copy import deepcopy
+from os.path import join
+
+import imodelsx.cache_save_utils
+import joblib
+import numpy as np
+import torch
+from sklearn.ensemble import RandomForestRegressor
+from tqdm import tqdm
+
+import neuro.data.story_names as story_names
+from neuro.data import response_utils
+from neuro.encoding.eval import (
+    add_summary_stats,
+    evaluate_pc_model_on_each_voxel,
+    nancorr,
+)
+from neuro.encoding.ridge import bootstrap_ridge
+from neuro.features import feat_select, feature_utils
+from neuro.features.questions.gpt4 import QS_HYPOTHESES_COMPUTED
 
 # get path to current file
 path_to_repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -198,7 +201,7 @@ def get_story_names(args):
             args.subject, 'train', use_huge=args.use_huge)
         story_names_test = ['adollshouse', 'hangtime', 'sloth']
         story_names_train = [
-            s for s in story_names_train if not s in story_names_test]
+            s for s in story_names_train if s not in story_names_test]
         # story_names_test = ['sloth', 'adollshouse', 'fromboyhoodtofatherhood']
         story_names_test = ['GenStory27', 'GenStory28', 'GenStory29']
         args.pc_components = 100
@@ -347,7 +350,7 @@ def _check_args(args):
         # f'Not using huge list of stories for subject {args.subject}')
 
     if args.embedding_layer >= 0:
-        assert not args.feature_space in ['qa_embedder', 'eng1000', 'finetune_roberta-base',
+        assert args.feature_space not in ['qa_embedder', 'eng1000', 'finetune_roberta-base',
                                           'finetune_roberta-base_binary'], f'embedding_layer only used for HF models but {args.feature_space} passed'
         assert args.qa_questions_version == 'v1', 'embedding_layer only used with v1'
         assert args.qa_embedding_model == 'mistralai/Mistral-7B-Instruct-v0.2', 'embedding_layer only used with dfeault (mistral) qa_embedding_model'
@@ -373,11 +376,11 @@ if __name__ == "__main__":
         parser, parser_without_computational_args, args, args.save_dir
     )
     if args.use_cache and already_cached and not args.use_test_setup:
-        print(f"cached version exists! Successfully skipping :)\n\n\n")
+        print("cached version exists! Successfully skipping :)\n\n\n")
         exit(0)
     for k in sorted(vars(args)):
         print("\t" + k + " " + str(vars(args)[k]))
-    logging.info(f"\n\n\tsaving to " + save_dir_unique + "\n")
+    logging.info("\n\n\tsaving to " + save_dir_unique + "\n")
 
     # set seed
     t0 = time.time()

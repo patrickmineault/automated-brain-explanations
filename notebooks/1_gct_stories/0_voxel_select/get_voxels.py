@@ -1,20 +1,10 @@
-import os
-import random
-import matplotlib.pyplot as plt
-import seaborn as sns
-from os.path import join
-from tqdm import tqdm
-import pandas as pd
-from typing import Dict, List
-import numpy as np
-# import sasc.viz
-from pprint import pprint
-import joblib
-from collections import defaultdict
-# from sasc.config import RESULTS_DIR, REPO_DIR
-from typing import Tuple
-import sys
 import json
+from os.path import join
+from typing import Dict, List, Tuple
+
+import joblib
+import numpy as np
+import pandas as pd
 
 VOXEL_DICT = {
     "UTS02": [
@@ -116,7 +106,7 @@ VOXEL_DICT = {
 
 
 INTERACTIONS_DICT = {
-    'UTS01_original': [],  # overwrote these
+    "UTS01_original": [],  # overwrote these
     "UTS01": [
         # very related (0.74)
         (100, 149),  # location, clothing
@@ -158,7 +148,7 @@ def _voxels_to_rows(
     voxels: List[Tuple], polysemantic_ngrams: Dict = None
 ) -> pd.DataFrame:
     """Add extra data (like ngrams) to each row"""
-    r = pd.read_pickle(join(RESULTS_DIR, 'sasc', "fmri_results_merged.pkl"))
+    r = pd.read_pickle(join(RESULTS_DIR, "sasc", "fmri_results_merged.pkl"))
     # put all voxel data into rows DataFrame
     rows = []
     expls = []
@@ -181,7 +171,7 @@ def _voxels_to_rows(
     return rows
 
 
-def get_rows_voxels(subject: str, setting="default", fname_suffix=''):
+def get_rows_voxels(subject: str, setting="default", fname_suffix=""):
     """Select rows from fitted voxels
 
     Params
@@ -192,14 +182,18 @@ def get_rows_voxels(subject: str, setting="default", fname_suffix=''):
         default, interactions
     """
 
-    if setting == 'qa':
-        return joblib.load(join(REPO_DIR, "notebooks_stories/0_voxel_select/rows_qa_may31.pkl"))
+    if setting == "qa":
+        return joblib.load(
+            join(REPO_DIR, "notebooks_stories/0_voxel_select/rows_qa_may31.pkl")
+        )
 
-    elif setting == 'roi':
+    elif setting == "roi":
         # roi_rows_file = join(
         # REPO_DIR, f"notebooks_stories/0_voxel_select/rows_roi_{subject.lower()}_may31.pkl")
         roi_rows_file = join(
-            REPO_DIR, f"notebooks_stories/0_voxel_select/rows_roi_{subject.lower()}_nov30{fname_suffix}.pkl")
+            REPO_DIR,
+            f"notebooks_stories/0_voxel_select/rows_roi_{subject.lower()}_nov30{fname_suffix}.pkl",
+        )
         return joblib.load(roi_rows_file)
 
     # UTS02 - Pilot voxels
@@ -233,7 +227,7 @@ def get_rows_voxels(subject: str, setting="default", fname_suffix=''):
             )
             vals = vals[vals["module_num"].isin(voxel_nums)]
             for voxel_num in voxel_nums:
-                if not voxel_num in vals["module_num"].values:
+                if voxel_num not in vals["module_num"].values:
                     print("missing", voxel_num)
             assert vals["module_num"].nunique(
             ) == vals.shape[0], "no duplicates"
@@ -273,6 +267,14 @@ def get_rows_voxels(subject: str, setting="default", fname_suffix=''):
             )
             v = pd.concat(vals[vals["module_num"] == x] for x in voxel_nums)
             for voxel_num in voxel_nums:
+                if voxel_num not in v["module_num"].values:
+                    print("missing", voxel_num)
+            assert v["module_num"].nunique() == v.shape[0], "no duplicates"
+            assert len(v) == len(voxel_nums), "all voxels found"
+            rows_list.append(_voxels_to_rows(v.values))
+        return tuple(rows_list)
+          v = pd.concat(vals[vals["module_num"] == x] for x in voxel_nums)
+           for voxel_num in voxel_nums:
                 if not voxel_num in v["module_num"].values:
                     print("missing", voxel_num)
             assert v["module_num"].nunique() == v.shape[0], "no duplicates"

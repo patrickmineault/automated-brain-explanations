@@ -1,6 +1,15 @@
 <h1 align="center">   <img src="https://microsoft.github.io/augmented-interpretable-models/auggam_gif.gif" width="25%"> Automated brain explanations <img src="https://microsoft.github.io/augmented-interpretable-models/auggam_gif.gif" width="25%"></h1>
+<p align="center">
+<img src="https://img.shields.io/badge/license-mit-blue.svg">
+  <img src="https://img.shields.io/badge/python-3.9--3.11-blue">
+  <img src="https://img.shields.io/badge/numpy->=2.0-blue">
+</p>  
 
+**How does the brain process language?** We've been studying this question using large-scale brain-imaging datasets collected from human subjects as they read and listen to stories.
+Along the way, we've used LLMs to help us predict and explain patterns in this data and found a bunch of cool things!
+This repo contains code for doing these analyses & applying the tools we've developed to various domains.
 
+### Reference
 This repo contains the code underlying two neuroscience studies:
 
 <details>
@@ -15,9 +24,14 @@ This repo contains the code underlying two neuroscience studies:
 </details>
 <br>
 
-and two ML papers (For a simple scikit-learn interface to use these, see the [imodelsX library](https://github.com/csinva/imodelsX)):
+and three ML papers (for a simple scikit-learn interface to use these, see the [imodelsX library](https://github.com/csinva/imodelsX)):
 <details>
-<summary>QA-Emb: Crafting Interpretable Embeddings by Asking LLMs Questions (<a href="https://arxiv.org/abs/2405.16714">Benara*, Singh* et al. 2024, NeurIPS</a>)
+<summary>Augmenting interpretable models with large language models during training (<a href="https://www.nature.com/articles/s41467-023-43713-1">Singh et al. 2023, Nature communications</a>)
+</summary>
+<br>
+</details>
+<details>
+<summary>QA-Emb: Crafting interpretable Embeddings by asking LLMs questions (<a href="https://arxiv.org/abs/2405.16714">Benara*, Singh* et al. 2024, NeurIPS</a>)
 </summary>
 <br>
 </details>
@@ -49,10 +63,11 @@ explanation_dict = explain_module_sasc(
 </details>
 <br>
 
-# Setting up
+### Setting up
 
 **Dataset**
 - The `data/decoding` folder contains a quickstart easy example for TR-level decoding
+  - it has everything needed, but if you want to visualize the results on a flatmap, you need to download the relevant PCs from [here](https://utexas.box.com/s/7ur0fsr52nephxp96hs5dxm99rk2v1u0)
 - to quickstart, just download the responses / wordsequences for 3 subjects from the [encoding scaling laws paper](https://utexas.app.box.com/v/EncodingModelScalingLaws/folder/230420528915)
   - this is all the data you need if you only want to analyze 3 subjects and don't want to make flatmaps
 - to run Eng1000, need to grab `em_data` directory from [here](https://github.com/HuthLab/deep-fMRI-dataset) and move its contents to `{root_dir}/em_data`
@@ -61,7 +76,6 @@ explanation_dict = explain_module_sasc(
 - to make flatmaps, need to set [pycortex filestore] to `{root_dir}/ds003020/derivative/pycortex-db/`
 
 **Code**
-- `pip install ridge_utils` (for full control, could alternatively `pip install -e ridge_utils_frozen` from the repo directory)
 - `pip install -e .` from the repo directory to locally install the `neuro` package
 - set `neuro.config.root_dir/data` to where you put all the data
   - loading responses
@@ -74,6 +88,6 @@ explanation_dict = explain_module_sasc(
 - `python experiments/02_fit_encoding.py`
     - This script takes many relevant arguments through argparse
 
-# Reference
-- See related [fMRI experiments](https://github.com/csinva/fmri)
-- Built from [this template](https://github.com/csinva/cookiecutter-ml-research)
+### Reference
+- see related [fMRI experiments](https://github.com/csinva/fmri)
+- built from [this template](https://github.com/csinva/cookiecutter-ml-research)

@@ -1,18 +1,17 @@
+import os
+import sys
+from os.path import join
+
 import imodelsx.process_results
+import numpy as np
+import pandas as pd
+
 # import viz
 # import dvu
 from tqdm import tqdm
-import seaborn as sns
-import os
-import pandas as pd
-from collections import defaultdict
-from matplotlib import pyplot as plt
-from os.path import join
-import numpy as np
-import sys
+
 sys.path.append('../experiments')
 # dvu.set_style()
-best_results_dir = '/home/chansingh/mntv1/deep-fMRI/encoding/may7'
 
 VOX_COUNTS = {
     'S01': 81126,

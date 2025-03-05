@@ -1,12 +1,14 @@
 import re
-import json
+from os.path import dirname
+
 import numpy as np
+
+from neuro.features.questions.gpt4 import QS_35_STABLE, QS_HYPOTHESES
+from neuro.features.questions.merge_v3_boostexamples import DICT_MERGE_V3_BOOSTEXAMPLES
 from neuro.features.questions.qa_questions_base import *
 from neuro.features.questions.qa_questions_data_boost import *
 from neuro.features.questions.qa_questions_llama_boost import *
-from neuro.features.questions.merge_v3_boostexamples import DICT_MERGE_V3_BOOSTEXAMPLES
-from neuro.features.questions.gpt4 import QS_35_STABLE, QS_HYPOTHESES
-from os.path import join, dirname
+
 path_to_file = dirname(__file__)
 
 
@@ -61,7 +63,7 @@ def get_kwargs_list_for_version_str(version_str: str):
     else:
         suffix = ''
 
-    if not '_' in version_str:
+    if '_' not in version_str:
         version_num = int(version_str.replace('v', ''))
         kwargs_list = [{'qa_questions_version': f'v{i + 1}{suffix}'}
                        for i in range(version_num)]
@@ -145,7 +147,7 @@ def get_questions(version='v1', suffix=None, full=False):
     elif version == 'all':
         return get_questions(version='v6', suffix=suffix, full=True)
 
-    if not 'neurosynth' in version and not version == 'qs_35':
+    if 'neurosynth' not in version and not version == 'qs_35':
         qs = sum([_split_bulleted_str(ans, remove_parentheticals)
                   for ans in ans_list], [])
 
@@ -165,7 +167,7 @@ def _get_merged_keep_indices_v3_boostexamples():
     questions = get_questions(
         version='v3_boostexamples', full=True)
     questions_to_drop = [k for k in sum(DICT_MERGE_V3_BOOSTEXAMPLES.values(), [
-    ]) if not k in DICT_MERGE_V3_BOOSTEXAMPLES]
+    ]) if k not in DICT_MERGE_V3_BOOSTEXAMPLES]
     return np.array([i for i, q in enumerate(questions) if q not in questions_to_drop])
 
 
