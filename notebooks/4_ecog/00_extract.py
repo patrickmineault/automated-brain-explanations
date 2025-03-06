@@ -1,36 +1,24 @@
-from neuro.ecog.questions import QS_O1_DEC26, QS_O1_DEC26_2, STORIES_POPULAR, STORIES_UNPOPULAR, STORIES_LOTR
-from neuro import config
-
-from imodelsx.qaemb.qaemb import QAEmb, get_sample_questions_and_examples
-import neuro.ecog.questions as questions
-from math import ceil
-from numpy.linalg import norm
-from copy import deepcopy
-import json
-import pickle as pkl
-from os.path import dirname
-import imodelsx.util
-from pprint import pprint
-import joblib
-import numpy as np
-from typing import List
-import sys
-import pandas as pd
-from tqdm import tqdm
-from os.path import join
-import matplotlib.pyplot as plt
-import os
-from os.path import expanduser
 import argparse
-from copy import deepcopy
 import logging
-import random
-from os.path import join
-import numpy as np
-import joblib
+import os
 import os.path
-from neuro.features.questions.gpt4 import QS_35_STABLE, QS_36_56_STABLE
+import random
+from copy import deepcopy
+from os.path import expanduser, join
+
 import imodelsx.cache_save_utils
+import imodelsx.util
+import joblib
+import numpy as np
+import pandas as pd
+from imodelsx.qaemb.qaemb import QAEmb
+from tqdm import tqdm
+
+from neuro import config
+from neuro.ecog.questions import QS_O1_DEC26, QS_O1_DEC26_2
+from neuro.features.questions.gpt4 import (QS_35_STABLE, QS_36_56_STABLE,
+                                           QS_57_121)
+
 path_to_repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -134,6 +122,9 @@ if __name__ == "__main__":
     elif args.questions == 'qs_56_stable':
         qs_to_run = QS_35_STABLE + QS_36_56_STABLE
         suffix_qs = '___qs_56_stable'
+    elif args.questions == 'qs_121_stable':
+        qs_to_run = QS_35_STABLE + QS_36_56_STABLE + QS_57_121
+        suffix_qs = '___qs_121_stable'
 
     # set up logging
     logger = logging.getLogger()
@@ -146,11 +137,11 @@ if __name__ == "__main__":
     )
 
     if args.use_cache and already_cached:
-        logging.info(f"cached version exists! Successfully skipping :)\n\n\n")
+        logging.info("cached version exists! Successfully skipping :)\n\n\n")
         exit(0)
     for k in sorted(vars(args)):
         logger.info("\t" + k + " " + str(vars(args)[k]))
-    logging.info(f"\n\n\tsaving to " + save_dir_unique + "\n")
+    logging.info("\n\n\tsaving to " + save_dir_unique + "\n")
 
     # set seed
     np.random.seed(args.seed)
@@ -237,4 +228,7 @@ if __name__ == "__main__":
     joblib.dump(
         {'Model succeeded'}, join(save_dir_unique, "results.pkl")
     )  # caching requires that this is called results.pkl
+    logging.info("Succesfully completed :)\n\n")
+    logging.info("Succesfully completed :)\n\n")
+    logging.info("Succesfully completed :)\n\n")
     logging.info("Succesfully completed :)\n\n")

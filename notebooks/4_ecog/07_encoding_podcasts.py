@@ -19,7 +19,7 @@ from tqdm import tqdm
 from neuro import config
 
 
-def get_features(bids_root, model_name: str, layer: int = -1):
+def get_features(model_name: str, layer: int = -1, bids_root=join(config.ECOG_DIR, 'podcasts_data', 'ds005574')):
 
     with h5py.File(join(bids_root, f"stimuli/{model_name}/features.hdf5"), "r") as f:
         datasets = list(f.keys())
@@ -55,28 +55,28 @@ def get_features(bids_root, model_name: str, layer: int = -1):
 
 
 def main(
-    bids_root: str = join(config.ECOG_DIR, 'podcasts_data', 'ds005574'),
-    band: str = "highgamma",
     model_name: str = "gpt2-xl",
     layer: int = -1,
+    band: str = "highgamma",
     n_folds: int = 2,
     tmin: float = -2,
     tmax: float = 2,
     out_dir: str = "results",
+    bids_root: str = join(config.ECOG_DIR, 'podcasts_data', 'ds005574'),
 ):
 
     if use_gpu := torch.cuda.is_available():
         print("Using GPU")
         set_backend("torch_cuda")
 
+    # loop over subjects
     edf_path = BIDSPath(
         root=join(bids_root, "derivatives", "ecogprep"),
         datatype="ieeg", description=band, extension=".fif"
     )
     edf_paths = edf_path.match()
 
-    df, embeddings = get_features(bids_root, model_name, layer)
-
+    df, embeddings = get_features(model_name, layer, bids_root=bids_root)
     for edf_path in edf_paths:
 
         raw = mne.io.read_raw_fif(edf_path)

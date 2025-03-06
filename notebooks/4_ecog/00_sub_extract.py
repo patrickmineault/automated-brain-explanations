@@ -1,7 +1,9 @@
 import os
-from os.path import dirname, join, expanduser
 import sys
+from os.path import dirname, join
+
 from imodelsx import submit_utils
+
 path_to_file = dirname(os.path.abspath(__file__))
 repo_dir = dirname(dirname(path_to_file))
 sys.path.append(repo_dir)
@@ -27,7 +29,8 @@ params_shared_dict = {
     # 'setting': ['sec_3'],
     # 'questions': ['o1_dec26'],
     # 'questions': ['qs_35_stable'],
-    'questions': ['qs_56_stable'],
+    # 'questions': ['qs_56_stable'],
+    'questions': ['qs_121_stable'],
 }
 FACTOR = 4
 # FACTOR = 1
