@@ -1,10 +1,11 @@
-from neuro.features import qa_questions
-from neuro.features.feat_select import get_alphas
 import os
-from os.path import dirname, join, expanduser
 import sys
+from os.path import dirname, expanduser, join
+
 from imodelsx import submit_utils
-from neuro.features.questions.gpt4 import QS_HYPOTHESES
+
+from neuro.features.feat_select import get_alphas
+
 path_to_file = os.path.dirname(os.path.abspath(__file__))
 repo_dir = dirname(dirname(os.path.abspath(__file__)))
 sys.path.append(repo_dir)
@@ -23,8 +24,8 @@ params_shared_dict = {
     'use_test_setup': [0],
     # 'save_dir': ['/home/chansingh/mntv1/deep-fMRI/encoding/aug14_neurosynth_gemv'],
     'save_dir': ['/home/chansingh/mntv1/deep-fMRI/encoding/oct17_neurosynth_gemv'],
-    'subject': ['UTS01', 'UTS02', 'UTS03'],
-    # 'subject': ['UTS03'],
+    # 'subject': ['UTS01', 'UTS02', 'UTS03'],
+    'subject': ['UTS03'],
     # 'subject': ['UTS01', 'UTS02', 'UTS03', 'UTS04', 'UTS05', 'UTS06', 'UTS07', 'UTS08'],
     'use_added_wordrate_feature': [0],  # , 1],
 }
@@ -44,9 +45,9 @@ params_coupled_dict = {
     +
     # shapley features
     [
-        # ('v3_boostexamples_merged', 'ensemble2',
-        #  get_alphas('qa_embedder')[3], 1, seed, None)
-        # for seed in range(50)
+        ('v3_boostexamples_merged', 'ensemble2',
+         get_alphas('qa_embedder')[3], 1, seed, None)
+        for seed in range(50)
     ]
     +
     [
@@ -70,10 +71,10 @@ params_coupled_dict = {
     # +
     # single question for everything
     [
-        ('v3_boostexamples_merged', 'ensemble2',
-         None, None, None, i)
-        # for i in range(len(QS_HYPOTHESES))
-        for i in range(qa_questions._get_merged_keep_indices_v3_boostexamples().size)
+        # ('v3_boostexamples_merged', 'ensemble2',
+        #  None, None, None, i)
+        # # for i in range(len(QS_HYPOTHESES))
+        # for i in range(qa_questions._get_merged_keep_indices_v3_boostexamples().size)
     ]
 
 }
@@ -101,8 +102,8 @@ submit_utils.run_args_list(
     args_list,
     script_name=script_name,
     unique_seeds='seed',
-    amlt_kwargs=amlt_kwargs_cpu,
-    # n_cpus=8,
+    # amlt_kwargs=amlt_kwargs_cpu,
+    n_cpus=8,
     # actually_run=False,
     # repeat_failed_jobs=True,
     # shuffle=True,

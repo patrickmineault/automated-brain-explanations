@@ -144,7 +144,7 @@ def get_gpt4_qa_embs_cached(
         if a question is not found in the list, returns nan for that column in embs
     '''
     # set up question names
-    CACHE_DIR_GPT = join(config.ROOT_DIR, 'qa/cache_gpt')
+    CACHE_DIR_GPT = join(config.FMRI_DIR_BLOB, 'qa/cache_gpt')
     if questions is None or questions == []:
         if '?' in qa_questions_version:
             questions = [qa_questions_version]

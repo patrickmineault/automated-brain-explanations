@@ -6,6 +6,8 @@ import joblib
 import numpy as np
 import pandas as pd
 
+from neuro import config
+
 VOXEL_DICT = {
     "UTS02": [
         # 8 voxels with 3 reps is ~15 mins
@@ -148,7 +150,8 @@ def _voxels_to_rows(
     voxels: List[Tuple], polysemantic_ngrams: Dict = None
 ) -> pd.DataFrame:
     """Add extra data (like ngrams) to each row"""
-    r = pd.read_pickle(join(RESULTS_DIR, "sasc", "fmri_results_merged.pkl"))
+    r = pd.read_pickle(
+        join(config.RESULTS_DIR, "sasc", "fmri_results_merged.pkl"))
     # put all voxel data into rows DataFrame
     rows = []
     expls = []
@@ -183,15 +186,19 @@ def get_rows_voxels(subject: str, setting="default", fname_suffix=""):
     """
 
     if setting == "qa":
+        # return joblib.load(
+        # join(config.REPO_DIR, "notebooks_stories/0_voxel_select/rows_qa_may31.pkl")
+        # )
         return joblib.load(
-            join(REPO_DIR, "notebooks_stories/0_voxel_select/rows_qa_may31.pkl")
+            join(config.REPO_DIR,
+                 f"notebooks/1_gct_stories/0_voxel_select/rows_qa_mar9_2025{fname_suffix}.pkl")
         )
 
     elif setting == "roi":
         # roi_rows_file = join(
         # REPO_DIR, f"notebooks_stories/0_voxel_select/rows_roi_{subject.lower()}_may31.pkl")
         roi_rows_file = join(
-            REPO_DIR,
+            config.REPO_DIR,
             f"notebooks_stories/0_voxel_select/rows_roi_{subject.lower()}_nov30{fname_suffix}.pkl",
         )
         return joblib.load(roi_rows_file)
@@ -210,7 +217,7 @@ def get_rows_voxels(subject: str, setting="default", fname_suffix=""):
             for k in ["UTS01", "UTS02", "UTS03"]
         }
     voxels_dict = json.load(
-        open(join(REPO_DIR, VOXEL_DICT_FNAMES[subject]), "r"))
+        open(join(config.REPO_DIR, VOXEL_DICT_FNAMES[subject]), "r"))
     vals = pd.DataFrame([tuple(x)
                         for x in sum(list(voxels_dict.values()), [])])
     vals.columns = ["expl", "subject", "module_num"]
@@ -243,7 +250,7 @@ def get_rows_voxels(subject: str, setting="default", fname_suffix=""):
         if setting == "polysemantic":
             polysemantic_ngrams = joblib.load(
                 join(
-                    REPO_DIR,
+                    config.REPO_DIR,
                     f"notebooks_stories/0_voxel_select/polysemantic/polysemantic_ngrams_{subject}.pkl",
                 )
             )
@@ -268,14 +275,6 @@ def get_rows_voxels(subject: str, setting="default", fname_suffix=""):
             v = pd.concat(vals[vals["module_num"] == x] for x in voxel_nums)
             for voxel_num in voxel_nums:
                 if voxel_num not in v["module_num"].values:
-                    print("missing", voxel_num)
-            assert v["module_num"].nunique() == v.shape[0], "no duplicates"
-            assert len(v) == len(voxel_nums), "all voxels found"
-            rows_list.append(_voxels_to_rows(v.values))
-        return tuple(rows_list)
-          v = pd.concat(vals[vals["module_num"] == x] for x in voxel_nums)
-           for voxel_num in voxel_nums:
-                if not voxel_num in v["module_num"].values:
                     print("missing", voxel_num)
             assert v["module_num"].nunique() == v.shape[0], "no duplicates"
             assert len(v) == len(voxel_nums), "all voxels found"

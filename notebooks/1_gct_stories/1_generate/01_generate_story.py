@@ -1,23 +1,17 @@
 import os
-import random
-import matplotlib.pyplot as plt
-import seaborn as sns
-from os.path import join
-from tqdm import tqdm
-import pandas as pd
-from typing import List
-import numpy as np
-import neuro.sasc.generate_helper
-from pprint import pprint
-import joblib
-from collections import defaultdict
-from neuro.config import RESULTS_DIR, REPO_DIR
-from typing import Tuple
 import sys
-import json
+from os.path import join
+
+import joblib
+import pandas as pd
+
+import neuro.sasc
+import neuro.sasc.generate_helper
+from neuro import config
+
 sys.path.append('../0_voxel_select')
 
-sys.path.append(join(REPO_DIR, "notebooks_stories", "0_voxel_select"))
+sys.path.append(join(config.REPO_DIR, "notebooks_stories", "0_voxel_select"))
 
 
 def get_rows_and_prompts_default(
@@ -41,7 +35,7 @@ def get_rows_and_prompts_default(
     examples_list = rows.top_ngrams_module_correct
     # n_examples from each list of examples (this is the 2nd and last place randomness is applied)
     # for pilot v0, just selected the first
-    examples_list = sasc.generate_helper.select_top_examples_randomly(
+    examples_list = neuro.sasc.generate_helper.select_top_examples_randomly(
         examples_list,
         n_examples_per_prompt_to_consider,
         n_examples_per_prompt,
@@ -49,8 +43,9 @@ def get_rows_and_prompts_default(
     )
 
     # get prompts
-    PV = sasc.generate_helper.get_prompt_templates(version)
-    prompts = sasc.generate_helper.get_prompts(expls, examples_list, version)
+    PV = neuro.sasc.generate_helper.get_prompt_templates(version)
+    prompts = neuro.sasc.generate_helper.get_prompts(
+        expls, examples_list, version)
     if 'prompt_suffix' in rows.columns:
         prompts = [p + row.prompt_suffix for p,
                    row in zip(prompts, rows.itertuples())]
@@ -86,13 +81,13 @@ def get_rows_and_prompts_interactions(
         seed=seed,
     )
 
-    examples_list1 = sasc.generate_helper.select_top_examples_randomly(
+    examples_list1 = neuro.sasc.generate_helper.select_top_examples_randomly(
         rows1["top_ngrams_module_correct"].values.tolist(), **kwargs
     )
-    examples_list2 = sasc.generate_helper.select_top_examples_randomly(
+    examples_list2 = neuro.sasc.generate_helper.select_top_examples_randomly(
         rows2["top_ngrams_module_correct"].values.tolist(), **kwargs
     )
-    prompts = sasc.generate_helper.get_prompts_interaction(
+    prompts = neuro.sasc.generate_helper.get_prompts_interaction(
         expls1,
         expls2,
         examples_list1,
@@ -101,7 +96,7 @@ def get_rows_and_prompts_interactions(
     )
     for p in prompts:
         print(p)
-    PV = sasc.generate_helper.get_prompt_templates_interaction(version)
+    PV = neuro.sasc.generate_helper.get_prompt_templates_interaction(version)
 
     return rows1, rows2, prompts, PV
 
@@ -119,7 +114,7 @@ if __name__ == "__main__":
         'roi': 'v6_noun',
     }
     # iterate over seeds
-    seeds = range(1, 7)
+    seeds = range(1, 4)
     # seeds = range(7, 12)
     # seeds = range(1, 10)
     # seeds = range(2, 3)
@@ -137,8 +132,8 @@ if __name__ == "__main__":
         # "interactions",
         # "default",
         # "polysemantic",
-        # 'qa',
-        'roi',
+        'qa',
+        # 'roi',
     ]:  # default, interactions, polysemantic
         for subject in [
             # "UTS02",
@@ -147,11 +142,12 @@ if __name__ == "__main__":
             for seed in seeds:
                 # for version in ["v5_noun"]:
                 version = VERSIONS[setting]
-                STORIES_DIR = join(RESULTS_DIR, "stories")
+                STORIES_DIR = config.STORIES_DIR_GCT
 
                 # EXPT_NAME = f"{subject.lower()}___qa_may31___seed={seed}"
                 # EXPT_NAME = f"{subject.lower()}___roi_may31___seed={seed}"
-                EXPT_NAME = f"{subject.lower()}___roi_nov30___seed={seed}{fname_suffix}"
+                # EXPT_NAME = f"{subject.lower()}___roi_nov30___seed={seed}{fname_suffix}"
+                EXPT_NAME = f"{subject.lower()}___qa_mar9_2025___seed={seed}{fname_suffix}"
                 EXPT_DIR = join(STORIES_DIR, setting, EXPT_NAME)
                 os.makedirs(EXPT_DIR, exist_ok=True)
 
@@ -165,10 +161,8 @@ if __name__ == "__main__":
                         version,
                         fname_suffix,
                     )
-                    rows.to_csv(join(EXPT_DIR, f"rows.csv"), index=False)
-                    rows.to_pickle(join(EXPT_DIR, f"rows.pkl"))
-                    print(prompts)
-                    # exit(0)
+                    rows.to_csv(join(EXPT_DIR, "rows.csv"), index=False)
+                    rows.to_pickle(join(EXPT_DIR, "rows.pkl"))
 
                 elif setting == "interactions":
                     rows1, rows2, prompts, PV = get_rows_and_prompts_interactions(
@@ -191,11 +185,11 @@ if __name__ == "__main__":
                         ignore_index=True,
                         axis=1,
                     ).transpose()
-                    rows1.to_csv(join(EXPT_DIR, f"rows1.csv"), index=False)
-                    rows1.to_pickle(join(EXPT_DIR, f"rows1.pkl"))
-                    rows2.to_csv(join(EXPT_DIR, f"rows2.csv"), index=False)
-                    rows2.to_pickle(join(EXPT_DIR, f"rows2.pkl"))
-                    rows1_rep.to_pickle(join(EXPT_DIR, f"rows.pkl"))
+                    rows1.to_csv(join(EXPT_DIR, "rows1.csv"), index=False)
+                    rows1.to_pickle(join(EXPT_DIR, "rows1.pkl"))
+                    rows2.to_csv(join(EXPT_DIR, "rows2.csv"), index=False)
+                    rows2.to_pickle(join(EXPT_DIR, "rows2.pkl"))
+                    rows1_rep.to_pickle(join(EXPT_DIR, "rows.pkl"))
 
                 for p in prompts:
                     print('\n' + p)
@@ -203,9 +197,10 @@ if __name__ == "__main__":
                     f.write("\n\n".join(prompts))
 
                 # save
+                print('here!')
                 continue
                 # generate paragraphs
-                paragraphs = sasc.generate_helper.get_paragraphs(
+                paragraphs = neuro.sasc.generate_helper.get_paragraphs(
                     prompts,
                     checkpoint="gpt-4",
                     prefix_first=PV["prefix_first"] if "prefix_first" in PV else None,

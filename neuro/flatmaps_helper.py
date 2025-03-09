@@ -34,7 +34,7 @@ def load_flatmaps(normalize_flatmaps, load_timecourse=False, explanations_only=F
     gemv_flatmaps_roi_custom2 = joblib.load(join(
         FLATMAPS_DIR, 'UTS03', 'roi_pilot8', 'resps_avg_dict_pilot8.pkl'))
     # gemv_flatmaps_dict_S03 = gemv_flatmaps_default | gemv_flatmaps_roi_custom1 | gemv_flatmaps_roi_custom2
-    gemv_flatmaps_dict_S03 = gemv_flatmaps_roi_custom1 | gemv_flatmaps_roi_custom2
+    gemv_flatmaps_dict_S03 = gemv_flatmaps_default | gemv_flatmaps_roi_custom1 | gemv_flatmaps_roi_custom2
 
     if load_timecourse:
         gemv_flatmaps_default = joblib.load(join(
