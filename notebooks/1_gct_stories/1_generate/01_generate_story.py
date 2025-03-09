@@ -115,6 +115,7 @@ if __name__ == "__main__":
     }
     # iterate over seeds
     seeds = range(1, 4)
+    # seeds = range(1, 2)
     # seeds = range(7, 12)
     # seeds = range(1, 10)
     # seeds = range(2, 3)
@@ -127,7 +128,8 @@ if __name__ == "__main__":
     # increased for roi stories
     n_examples_per_prompt = 5
     n_examples_per_prompt_to_consider = 9
-    fname_suffix = '_v2'
+    fname_suffix = '_v1'
+    pad_beginning_and_end = True
     for setting in [
         # "interactions",
         # "default",
@@ -197,16 +199,32 @@ if __name__ == "__main__":
                     f.write("\n\n".join(prompts))
 
                 # save
-                print('here!')
-                continue
                 # generate paragraphs
                 paragraphs = neuro.sasc.generate_helper.get_paragraphs(
                     prompts,
-                    checkpoint="gpt-4",
+                    checkpoint="gpt-4o",
+                    # checkpoint="gpt-4",
                     prefix_first=PV["prefix_first"] if "prefix_first" in PV else None,
                     prefix_next=PV["prefix_next"] if "prefix_next" in PV else None,
                     cache_dir="/home/chansingh/cache/llm_stories_may8",
                 )
+                if pad_beginning_and_end:
+                    START_PARAGRAPH = 'You are about to read a story told in the first person. Please pay attention to the details of the story.'
+                    END_PARAGRAPH = 'The narrative story has now concluded. Hope you enjoyed passively reading the story.'
+                    paragraphs = [START_PARAGRAPH] + \
+                        paragraphs + [END_PARAGRAPH]
+                    prompts = ['START'] + prompts + ['END']
+                    DUMMY_START = pd.DataFrame(
+                        [{'expl': 'START', 'top_ngrams_module_correct': [],
+                            'subject': subject, 'prompt_suffix': ''}])
+                    DUMMY_END = pd.DataFrame(
+                        [{'expl': 'END', 'top_ngrams_module_correct': [],
+                            'subject': subject, 'prompt_suffix': ''}])
+                    rows = pd.concat([DUMMY_START, rows, DUMMY_END])
+
+                    # overwrite rows
+                    rows.to_csv(join(EXPT_DIR, "rows.csv"), index=False)
+                    rows.to_pickle(join(EXPT_DIR, "rows.pkl"))
 
                 with open(join(EXPT_DIR, "story.txt"), "w") as f:
                     f.write("\n\n".join(paragraphs))
