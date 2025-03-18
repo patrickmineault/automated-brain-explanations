@@ -1,15 +1,10 @@
-import matplotlib
-from matplotlib.cm import ScalarMappable
-from matplotlib.colors import Normalize
-import numpy as np
-import matplotlib.pyplot as plt
-from typing import List
-import seaborn as sns
-from os.path import join
 import os
-from os.path import dirname
 import os.path
+
 import cortex
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
 
 MODELS_RENAME = {
     'bert-base-uncased': 'BERT (Finetuned)',
@@ -83,14 +78,15 @@ def dset_rename(x):
 
 def quickshow(
         X: np.ndarray, subject="UTS03", fname_save=None, cmap='RdBu_r',
-        with_colorbar=True, kwargs={'with_rois': True}, cmap_perc_to_hide=None):
-    import cortex
-
+        with_colorbar=True, kwargs={'with_rois': True}, cmap_perc_to_hide=None, center=True):
     """
     Actual visualizations
     Note: for this to work, need to point the cortex config filestore to the `ds003020/derivative/pycortex-db` directory.
     This might look something like `/home/chansingh/mntv1/deep-fMRI/data/ds003020/derivative/pycortex-db/UTS03/anatomicals/`
     """
+    if isinstance(cmap, int):
+        cmap = sns.color_palette("husl", cmap, as_cmap=True)
+
     if isinstance(X, cortex.VolumeRGB):
         vol = X
     else:
@@ -104,15 +100,17 @@ def quickshow(
                 if subject.startswith('S0'):
                     subject = 'UT' + subject
                 xfmname = f"{subject}_auto"
+
             vol = cortex.Volume(X, subject, xfmname=xfmname, cmap=cmap)
         # , with_curvature=True, with_sulci=True)
         vabs = np.nanmax(np.abs(X))
-        if not cmap == 'Reds':
-            vol.vmin = -vabs
-            vol.vmax = vabs
-        elif cmap == 'Reds':
-            vol.vmin = np.nanmin(X)
-            vol.vmax = np.nanmax(X)
+        if center:
+            if not cmap == 'Reds':
+                vol.vmin = -vabs
+                vol.vmax = vabs
+            if (cmap == 'Reds' or not center):
+                vol.vmin = np.nanmin(X)
+                vol.vmax = np.nanmax(X)
 
         if cmap_perc_to_hide is not None:
             vol.vmin = np.nanpercentile(X, cmap_perc_to_hide)
