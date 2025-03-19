@@ -152,6 +152,19 @@ def load_custom_rois(subject, suffix_setting='_fedorenko'):
             config.FMRI_DIR_BLOB, 'brain_tune/voxel_neighbors_and_pcs/', f'all_spotlights_UT{subject}.jbl'))
         return {'spot' + str(i): rois_spotlights[i][-1]
                 for i in range(len(rois_spotlights))}
+    elif suffix_setting == '_lobes':
+        lobes_by_subj = np.load(
+            join(config.FMRI_DIR_BLOB, 'brain_tune', 'lobes_vox.npz'), allow_pickle=True)
+        lobes_dict_by_hemisphere = lobes_by_subj[subject].flatten()[0]
+        lobes_dict = {}
+        for k, v in lobes_dict_by_hemisphere.items():
+            lobes_dict[k] = np.zeros(neuro.analyze_helper.VOX_COUNTS[subject])
+            v_left, v_right = v
+            lobes_dict[k][v_left] = 1
+            lobes_dict[k][v_right] = 1
+        # cast values as type int instead of bool
+        # lobes_dict = {k: v.astype(int) for k, v in lobes_dict.items()}
+        return lobes_dict
 
 
 ROI_EXPLANATIONS_S03 = {
