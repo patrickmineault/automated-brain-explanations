@@ -18,6 +18,7 @@ params_shared_dict = {
     'nboots': [5],
     'use_test_setup': [0],
     'use_extract_only': [0],
+    'use_huge': [0],
     # 'save_dir': ['/home/chansingh/mntv1/deep-fMRI/encoding/may7'],
     # 'save_dir': ['/home/chansingh/mntv1/deep-fMRI/encoding/may27'],
     # this dir contains results for non-full cortex
@@ -25,7 +26,8 @@ params_shared_dict = {
     # 'pc_components': [100], # if predict_subset is 'all', this is the number of components to use, otherwise must comment it
 
     # first run to perform and save feature selection #######################################
-    'subject': ['shared'],  # first run with shared
+    # run with a single subject, which will do feature selection across UTS01-UTS03 automatically when feature_selection_alpha > 0
+    'subject': ['UTS03'],
     'seed': range(5),
     'predict_subset': ['prefrontal', 'parietal', 'temporal', 'occipital', 'sensorimotor', 'cingulate', 'insula'],
     # 'predict_subset': ['all'],

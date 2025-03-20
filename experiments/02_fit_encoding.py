@@ -37,8 +37,8 @@ def add_main_args(parser):
     """
     # data arguments
     parser.add_argument("--subject", type=str, default='UTS03',
-                        choices=[f'UTS0{k}' for k in range(1, 9)] + ['shared'],
-                        help='shared concatenates responses for S01-S03 (and only load shared stories), useful for feature selection')
+                        choices=[f'UTS0{k}' for k in range(1, 9)],
+                        help='shared concatenates responses for S01-S03 (and only load shared stories), useful for feature selection but shouldnt be passed here as an arg')
     parser.add_argument('--pc_components', type=int, default=-1,
                         help='''number of principal components to use for reducing output (-1 doesnt use PCA at all).
                         Note, use_test_setup alters this to 100.''')

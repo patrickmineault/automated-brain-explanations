@@ -18,6 +18,7 @@ from sklearn.preprocessing import StandardScaler
 
 import neuro.config as config
 import neuro.features
+import neuro.flatmaps_helper
 
 # import random
 
