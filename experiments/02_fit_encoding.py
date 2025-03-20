@@ -55,6 +55,8 @@ def add_main_args(parser):
                         help='Path to saved pickles for distillation. Instead of fitting responses, fit the predictions of this model.')
     parser.add_argument("--use_eval_brain_drive", type=int, default=0,
                         help='Whether to evaluate fitted model on brain drive stories')
+    parser.add_argument('--predict_subset', type=str, default='all', choices=[
+                        'all', 'prefrontal', 'parietal', 'temporal', 'occipital', 'sensorimotor', 'cingulate', 'insula'])
 
     # encoding
     parser.add_argument("--feature_space", type=str,
@@ -468,6 +470,7 @@ if __name__ == "__main__":
         # r['corrs_tune_pc_weighted_mean'] = np.mean(
         #     explained_var_weight * r['corrs_tune_pc'])
 
+    '''
     if args.use_eval_brain_drive and args.subject in story_names.TEST_BRAINDRIVE.keys():
         story_names_brain_drive = story_names.get_story_names(
             subject=args.subject, use_brain_drive=True)
@@ -477,7 +480,8 @@ if __name__ == "__main__":
             args, story_names_brain_drive, args.subject, use_brain_drive=True)
         r['corrs_brain_drive'] = evaluate_pc_model_on_each_voxel(
             args, stim_brain_drive_delayed, resp_brain_drive,
-            model_params_to_save, pca, scaler_test)
+            model_params_to_save, pca, scaler_test)'
+    '''
 
     # add extra stats
     r = add_summary_stats(r, verbose=True)

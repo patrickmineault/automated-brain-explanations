@@ -208,3 +208,8 @@ def load_known_rois(subject):
     if subject == 'S03':
         rois_dict['OPA'] = rois_dict['TOS']
     return rois_dict
+
+
+if __name__ == '__main__':
+    lobes_dict = load_custom_rois('S02', '_lobes')
+    print(lobes_dict.keys())

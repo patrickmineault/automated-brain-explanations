@@ -1,60 +1,59 @@
 
 
 import os
-from os.path import dirname, join, expanduser
 import sys
-import numpy as np
+from os.path import dirname, expanduser, join
+
 from imodelsx import submit_utils
+
 from neuro.features.feat_select import get_alphas
+
 path_to_file = os.path.dirname(os.path.abspath(__file__))
 repo_dir = dirname(dirname(os.path.abspath(__file__)))
 sys.path.append(repo_dir)
-# python /home/chansingh/fmri/01_fit_encoding.py
+
 params_shared_dict = {
     # things to average over
     'use_cache': [1],
     'nboots': [5],
     'use_test_setup': [0],
     'use_extract_only': [0],
-    'save_dir': ['/home/chansingh/mntv1/deep-fMRI/encoding/may7'],
+    # 'save_dir': ['/home/chansingh/mntv1/deep-fMRI/encoding/may7'],
     # 'save_dir': ['/home/chansingh/mntv1/deep-fMRI/encoding/may27'],
-    'pc_components': [100],
+    # this dir contains results for non-full cortex
+    'save_dir': ['/home/chansingh/mntv1/deep-fMRI/encoding/mar20_2025'],
+    # 'pc_components': [100], # if predict_subset is 'all', this is the number of components to use, otherwise must comment it
 
     # first run to perform and save feature selection #######################################
-    # 'subject': ['shared'],  # first run with shared
-    # 'seed': range(5),
-    # 'feature_selection_alpha': get_alphas('qa_embedder'),
-    # 'feature_selection_alpha': get_alphas('eng1000'),
+    'subject': ['shared'],  # first run with shared
+    'seed': range(5),
+    'predict_subset': ['prefrontal', 'parietal', 'temporal', 'occipital', 'sensorimotor', 'cingulate', 'insula'],
+    # 'predict_subset': ['all'],
 
-
-    # next, we can use selected features to fit ridge #######################################
+    # second, we can use selected features to fit ridge #######################################
     # 'ndelays': [4, 8],
     # 'ndelays': [8],
     # 'subject': ['UTS01', 'UTS02', 'UTS03'],
-    # 'feature_selection_alpha': get_alphas('eng1000'),
-    # 'feature_selection_alpha': get_alphas('qa_embedder'),
     # 'feature_selection_stability_seeds': [5],
 
-    # we can also use selected features with subsampling #######################################
-    'ndelays': [8],
+    # third, we can also use selected features with subsampling #######################################
+    # 'ndelays': [8],
     # 'subject': [f'UTS0{k}' for k in range(1, 9)],
-    'subject': ['UTS01', 'UTS02', 'UTS03'],
-    # 'subject': [f'UTS0{k}' for k in range(4, 9)],
-    'feature_selection_alpha': get_alphas('eng1000'),
     # 'feature_selection_stability_seeds': [5],
-    # 'feature_selection_alpha': [get_alphas('qa_embedder')[3]],
-    # 'num_stories': [10],
-    # 'num_stories': [5, 20],
-    'num_stories': [-1],
     # 'num_stories': [-1, 5, 10, 20],
 
 }
 
 params_coupled_dict = {
-    ('feature_space', 'qa_questions_version', 'qa_embedding_model'): [
-        ('qa_embedder', 'v3_boostexamples_merged', 'ensemble2')
-        # ('eng1000', None, None),
-        # ('bert-base-uncased', None, None), # maybe never have to run this
+    ('feature_space', 'qa_questions_version', 'qa_embedding_model', 'feature_selection_alpha'):
+    [
+        # ('qa_embedder', 'v3_boostexamples_merged', 'ensemble2', alpha)
+        # for alpha in get_alphas('qa_embedder')
+    ]
+    +
+    [
+        ('eng1000', None, None, alpha)
+        for alpha in get_alphas('eng1000')
     ],
 }
 # Args list is a list of dictionaries
@@ -85,7 +84,7 @@ submit_utils.run_args_list(
     args_list,
     script_name=script_name,
     # amlt_kwargs=amlt_kwargs,
-    n_cpus=6,
+    n_cpus=1,
     # n_cpus=2,
     # gpu_ids=[0, 1, 2, 3],
     # actually_run=False,

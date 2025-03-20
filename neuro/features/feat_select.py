@@ -37,11 +37,13 @@ def get_selected_coef(args, feature_selection_stability_seeds: int, seed: int,
         print('nonzero stable', coef_nonzero.sum())
         return coef_nonzero
 
-    cache_dir = join(config.root_dir, 'qa', 'sparse_feats_shared')
+    cache_dir = join(config.FMRI_DIR_BLOB, 'qa', 'sparse_feats_shared')
     cache_file = join(
         cache_dir,
+        args.predict_subset,
         f"{args.feature_space.replace('/', '-')}___qa_questions_version={args.qa_questions_version}___{args.qa_embedding_model.replace('/', '-')}",
-        f'seed={seed}___feature_selection_frac={args.feature_selection_frac:.2f}___feature_selection_alpha={args.feature_selection_alpha:.2e}.joblib')
+        f'seed={seed}___feature_selection_frac={args.feature_selection_frac:.2f}___feature_selection_alpha={args.feature_selection_alpha:.2e}.joblib'
+    )
     os.makedirs(dirname(cache_file), exist_ok=True)
     if os.path.exists(cache_file):
         coef_enet = joblib.load(cache_file)
