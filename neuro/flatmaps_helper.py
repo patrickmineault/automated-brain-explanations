@@ -158,11 +158,12 @@ def load_custom_rois(subject, suffix_setting='_fedorenko'):
         lobes_dict_by_hemisphere = lobes_by_subj[subject].flatten()[0]
         lobes_dict = {}
         for k, v in lobes_dict_by_hemisphere.items():
-            lobes_dict[k] = np.zeros(neuro.analyze_helper.VOX_COUNTS[subject])
+            lobes_dict[k] = np.zeros(
+                neuro.analyze_helper.VOX_COUNTS[subject]).astype(bool)
             v_left, v_right = v
-            lobes_dict[k][v_left] = 1
-            lobes_dict[k][v_right] = 1
-        # cast values as type int instead of bool
+            lobes_dict[k][v_left] = True
+            lobes_dict[k][v_right] = True
+        # need to keep this as bool not int for proper indexing
         # lobes_dict = {k: v.astype(int) for k, v in lobes_dict.items()}
         return lobes_dict
 
@@ -178,6 +179,8 @@ ROI_EXPLANATIONS_S03 = {
     'RSC': 'Travel and location names',
     'RSC_only': 'Location names',
     'sPMv': 'Dialogue and responses',
+
+
 }
 
 FED_DRIVING_EXPLANATIONS_S03 = {

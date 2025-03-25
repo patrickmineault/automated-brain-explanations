@@ -99,17 +99,24 @@ def get_resps_full(
         args, story_names_train, subject)
 
     if args.pc_components <= 0:
+
+        # actually remove non-masked if PCA is not used
         if not args.predict_subset == 'all':
-            # load indexes of voxels to predict
-            lobes_dict = neuro.flatmaps_helper.load_custom_rois(
-                args.subject.replace('UT', ''), '_lobes')
-            idxs_mask = lobes_dict[args.predict_subset]
+            idxs_mask = neuro.flatmaps_helper.load_custom_rois(
+                subject.replace('UT', ''), '_lobes')[args.predict_subset]
             resp_train = resp_train[:, idxs_mask]
             resp_test = resp_test[:, idxs_mask]
-            logging.info(f'resp_train.shape (no pca) {resp_train.shape}')
+            logging.info(
+                f'resp_train.shape (no pca) {resp_train.shape} vox0 nunique {len(np.unique(resp_train[0]))}')
         return resp_train, resp_test
     else:
-        assert args.predict_subset == 'all', 'pc_components > 0 only supported for all voxels'
+        # if PCA is used, just set the non-masked to 0
+        if not args.predict_subset == 'all':
+            idxs_mask = neuro.flatmaps_helper.load_custom_rois(
+                subject.replace('UT', ''), '_lobes')[args.predict_subset]
+            resp_train[:, idxs_mask] = 0
+            resp_test[:, idxs_mask] = 0
+
         logging.info('pc transforming resps...')
 
         # pca.components_ is (n_components, n_voxels)

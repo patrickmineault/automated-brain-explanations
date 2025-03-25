@@ -37,8 +37,8 @@ def add_main_args(parser):
     """
     # data arguments
     parser.add_argument("--subject", type=str, default='UTS03',
-                        choices=[f'UTS0{k}' for k in range(1, 9)],
-                        help='shared concatenates responses for S01-S03 (and only load shared stories), useful for feature selection but shouldnt be passed here as an arg')
+                        choices=[f'UTS0{k}' for k in range(1, 9)] + ['shared'],
+                        help='shared concatenates responses for S01-S03 (and only load shared stories), useful for feature selection')
     parser.add_argument('--pc_components', type=int, default=-1,
                         help='''number of principal components to use for reducing output (-1 doesnt use PCA at all).
                         Note, use_test_setup alters this to 100.''')
@@ -346,7 +346,7 @@ def fit_regression(args, r, features_train_delayed, resp_train, features_test_de
 
 
 def _check_args(args):
-    if args.subject not in ['UTS01', 'UTS02', 'UTS03'] and args.use_huge:
+    if args.subject not in ['UTS01', 'UTS02', 'UTS03', 'shared'] and args.use_huge:
         args.use_huge = 0
         # warnings.warn(
         # f'Not using huge list of stories for subject {args.subject}')
@@ -451,6 +451,11 @@ if __name__ == "__main__":
     print('fitting regression...')
     r, model_params_to_save = fit_regression(
         args, r, stim_train_delayed, resp_train, stim_test_delayed, resp_test)
+    if args.subject == 'shared':
+        # save and exit without eval
+        joblib.dump(r, join(save_dir_unique, "results.pkl"))
+        logging.info('skipping eval for shared subject')
+        exit(0)
 
     # evaluate per voxel
     if args.pc_components > 0:
@@ -458,7 +463,7 @@ if __name__ == "__main__":
             args, story_names_test, args.subject)
         r['corrs_test'] = evaluate_pc_model_on_each_voxel(
             args, stim_test_delayed, resp_test,
-            model_params_to_save, pca, scaler_test)
+            model_params_to_save, pca, scaler_test, args.predict_subset)
         # model_params_to_save['pca'] = pca
         model_params_to_save['scaler_test'] = scaler_test
         model_params_to_save['scaler_train'] = scaler_train

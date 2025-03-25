@@ -3,6 +3,8 @@ import logging
 
 import numpy as np
 
+import neuro.flatmaps_helper
+
 
 def nancorr(x, y):
     mask = ~np.isnan(x) & ~np.isnan(y)
@@ -11,7 +13,9 @@ def nancorr(x, y):
 
 def evaluate_pc_model_on_each_voxel(
         args, stim, resp,
-        model_params_to_save, pca, scaler):
+        model_params_to_save, pca, scaler,
+        predict_subset='all',
+):
     if args.encoding_model == 'ridge':
         weights_pc = model_params_to_save['weights_pc']
         preds_pc = stim @ weights_pc
@@ -27,8 +31,15 @@ def evaluate_pc_model_on_each_voxel(
 
     preds_voxels = pca.inverse_transform(
         scaler.inverse_transform(preds_pc))  # (n_trs x n_voxels)
+    if not predict_subset == 'all':
+        idxs_mask = neuro.flatmaps_helper.load_custom_rois(
+            args.subject.replace('UT', ''), '_lobes')[predict_subset]
+        vox_idxs = np.where(idxs_mask)[0]
+    else:
+        vox_idxs = range(preds_voxels.shape[1])
+
     corrs = []
-    for i in range(preds_voxels.shape[1]):
+    for i in vox_idxs:
         corrs.append(nancorr(preds_voxels[:, i], resp[:, i]))
     corrs = np.array(corrs)
     corrs[np.isnan(corrs)] = 0

@@ -18,16 +18,16 @@ params_shared_dict = {
     'nboots': [5],
     'use_test_setup': [0],
     'use_extract_only': [0],
-    'use_huge': [0],
+    'use_huge': [1],
     # 'save_dir': ['/home/chansingh/mntv1/deep-fMRI/encoding/may7'],
     # 'save_dir': ['/home/chansingh/mntv1/deep-fMRI/encoding/may27'],
     # this dir contains results for non-full cortex
     'save_dir': ['/home/chansingh/mntv1/deep-fMRI/encoding/mar20_2025'],
-    # 'pc_components': [100], # if predict_subset is 'all', this is the number of components to use, otherwise must comment it
+    'pc_components': [100],
 
     # first run to perform and save feature selection #######################################
     # run with a single subject, which will do feature selection across UTS01-UTS03 automatically when feature_selection_alpha > 0
-    'subject': ['UTS03'],
+    'subject': ['shared'],
     'seed': range(5),
     'predict_subset': ['prefrontal', 'parietal', 'temporal', 'occipital', 'sensorimotor', 'cingulate', 'insula'],
     # 'predict_subset': ['all'],
@@ -49,13 +49,13 @@ params_shared_dict = {
 params_coupled_dict = {
     ('feature_space', 'qa_questions_version', 'qa_embedding_model', 'feature_selection_alpha'):
     [
-        # ('qa_embedder', 'v3_boostexamples_merged', 'ensemble2', alpha)
-        # for alpha in get_alphas('qa_embedder')
+        ('qa_embedder', 'v3_boostexamples_merged', 'ensemble2', alpha)
+        for alpha in get_alphas('qa_embedder')
     ]
     +
     [
-        ('eng1000', None, None, alpha)
-        for alpha in get_alphas('eng1000')
+        # ('eng1000', None, None, alpha)
+        # for alpha in get_alphas('eng1000')
     ],
 }
 # Args list is a list of dictionaries
@@ -86,7 +86,7 @@ submit_utils.run_args_list(
     args_list,
     script_name=script_name,
     # amlt_kwargs=amlt_kwargs,
-    n_cpus=1,
+    n_cpus=4,
     # n_cpus=2,
     # gpu_ids=[0, 1, 2, 3],
     # actually_run=False,

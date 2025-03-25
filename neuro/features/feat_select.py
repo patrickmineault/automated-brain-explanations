@@ -47,9 +47,10 @@ def get_selected_coef(args, feature_selection_stability_seeds: int, seed: int,
     os.makedirs(dirname(cache_file), exist_ok=True)
     if os.path.exists(cache_file):
         coef_enet = joblib.load(cache_file)
-        print('Loaded from cache:', cache_file)
+        print('\tLoaded from cache:', cache_file)
     else:
-        print('couldn\'t find cache file:', cache_file, '\n\tfitting now...')
+        print('\tcouldn\'t find cache file:', cache_file)
+        print('\tloading shared responses to fit multitaskelasticnet...')
         # remove delays from stim
         stim_train = stim_train_delayed[:,
                                         :stim_train_delayed.shape[1] // args.ndelays]
@@ -65,6 +66,7 @@ def get_selected_coef(args, feature_selection_stability_seeds: int, seed: int,
             stim_train = stim_train[idxs_subsample]
             resp_train_shared = resp_train_shared[idxs_subsample]
 
+        print('\tfitting multitaskelasticnet...')
         m = MultiTaskElasticNet(
             alpha=args.feature_selection_alpha,
             l1_ratio=0.9,
