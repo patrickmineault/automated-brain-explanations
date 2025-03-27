@@ -38,7 +38,7 @@ def add_main_args(parser):
     # data arguments
     parser.add_argument("--subject", type=str, default='UTS03',
                         choices=[f'UTS0{k}' for k in range(1, 9)] + ['shared'],
-                        help='shared concatenates responses for S01-S03 (and only load shared stories), useful for feature selection')
+                        help='shared concatenates responses for S01-S03 (and only load shared stories), useful for feature selection but will not actually run regression')
     parser.add_argument('--pc_components', type=int, default=-1,
                         help='''number of principal components to use for reducing output (-1 doesnt use PCA at all).
                         Note, use_test_setup alters this to 100.''')
@@ -451,11 +451,6 @@ if __name__ == "__main__":
     print('fitting regression...')
     r, model_params_to_save = fit_regression(
         args, r, stim_train_delayed, resp_train, stim_test_delayed, resp_test)
-    if args.subject == 'shared':
-        # save and exit without eval
-        joblib.dump(r, join(save_dir_unique, "results.pkl"))
-        logging.info('skipping eval for shared subject')
-        exit(0)
 
     # evaluate per voxel
     if args.pc_components > 0:
