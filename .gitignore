@@ -170,4 +170,3 @@ joblib
 **.zip
 **.h5
 scripts/logs
-!requirements.txt
